@@ -5,9 +5,4 @@ import_sprint4.ps1
 
 # Graphics
 *.dll
-main.exe
 graphics/SETUP_COMPLETE.md
-.vscode/c_cpp_properties.json
-.vscode/tasks.json
-graphics/window_test.cpp
-graphics/test.cpp

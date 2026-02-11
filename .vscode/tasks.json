@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build SFML",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-IC:/SFML-3.0.2/include",
+        "${file}",
+        "-LC:/SFML-3.0.2/lib",
+        "-lsfml-graphics",
+        "-lsfml-window",
+        "-lsfml-system",
+        "-o",
+        "${fileDirname}/main.exe"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"]
+    }
+  ]
+}
