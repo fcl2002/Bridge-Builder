@@ -16,9 +16,9 @@ Develop a 2D bridge/structure simulation game in C++ where players build bridges
 
 ---
 
-## 🏷️ Task Labels Legend
+## 🏷️ Labels & Definitions
 
-### Priority Levels
+### Priority Levels:
 
 - **High**: Critical for project success, blocks other tasks, or core functionality
 - **Medium**: Important but not blocking, adds significant value
@@ -32,234 +32,153 @@ Develop a 2D bridge/structure simulation game in C++ where players build bridges
 
 ---
 
-## 📅 Sprint Schedule & Task Board
+## 📖 Epics & User Stories
 
-### Sprint 1: 11/02/2026 – 17/02/2026
+### Epic 1: Physics Engine Foundation
 
-**Duration:** 1 week | **Status:** 🟢 In Progress
+**Goal:** Build a robust physics simulation system for structural analysis
 
-#### 🔵 Physics/Simulation
+**Overview:**  
+This epic focuses on developing the physics engine that simulates forces, stresses, and structural collapses. It implements force calculations (compression, tension, torque), structural failure detection, material properties (steel, wood, cable), and performance optimization for complex structures. The system must be realistic, efficient, and capable of supporting real-time simulations with hundreds of components.
 
-- [ ] Research physics engine options (Box2D, custom implementation) | **Priority:** High | **Complexity:** Medium
-- [ ] Define physics data structures (nodes, beams, forces) | **Priority:** High | **Complexity:** Medium
-- [ ] Design force calculation architecture | **Priority:** High | **Complexity:** High
-- [ ] Study structural mechanics fundamentals | **Priority:** Medium | **Complexity:** Medium
+**Key Features:**
 
-#### 🟢 Graphics/UI
-
-- [ ] Research graphics libraries (SDL2, SFML, OpenGL) | **Priority:** High | **Complexity:** Medium
-- [ ] Set up rendering environment | **Priority:** High | **Complexity:** Easy
-- [ ] Design UI mockups and wireframes | **Priority:** Medium | **Complexity:** Easy
-- [ ] Plan coordinate system and camera view | **Priority:** High | **Complexity:** Medium
-
-#### 🟡 Game Logic
-
-- [ ] Define game architecture and design patterns | **Priority:** High | **Complexity:** High
-- [ ] Establish project structure and file organization | **Priority:** High | **Complexity:** Easy
-- [ ] Create core game state machine design | **Priority:** High | **Complexity:** Medium
-- [ ] Define level data format | **Priority:** Medium | **Complexity:** Medium
+- Node and beam system with force calculations
+- Collapse detection and failure animation
+- Material properties and breaking thresholds
+- Load application system (vehicles and static weights)
+- Performance optimization and edge case testing
 
 ---
 
-### Sprint 2: 18/02/2026 – 10/03/2026
+### Epic 2: Graphics & Visualization System
 
-**Duration:** 3 weeks | **Status:** ⚪ Not Started
+**Goal:** Create an intuitive visual interface for building and testing bridges
 
-#### 🔵 Physics/Simulation
+**Overview:**  
+This epic develops the entire visual layer and player interaction. It implements 2D rendering with SDL/OpenGL, grid system for construction, visual stress indicators with color gradients, user interface for material selection and information, collapse animations with particle effects, and menu system. The goal is to create a clear, responsive, and pleasant visual experience that helps players understand the state of their structures.
 
-- [ ] Implement node and beam data structures | **Priority:** High | **Complexity:** High
-- [ ] Develop force calculation system (gravity, tension, compression) | **Priority:** High | **Complexity:** High
-- [ ] Create physics update loop | **Priority:** High | **Complexity:** Medium
-- [ ] Implement basic stress analysis | **Priority:** High | **Complexity:** High
-- [ ] Add structural stability checks | **Priority:** Medium | **Complexity:** High
+**Key Features:**
 
-#### 🟢 Graphics/UI
-
-- [ ] Implement basic window and rendering loop | **Priority:** High | **Complexity:** Medium
-- [ ] Create drawing functions for nodes and beams | **Priority:** High | **Complexity:** Medium
-- [ ] Develop grid system for building | **Priority:** Medium | **Complexity:** Medium
-- [ ] Add mouse input handling | **Priority:** High | **Complexity:** Medium
-- [ ] Implement camera pan and zoom | **Priority:** Medium | **Complexity:** Medium
-
-#### 🟡 Game Logic
-
-- [ ] Implement level loading system | **Priority:** High | **Complexity:** Medium
-- [ ] Create build mode mechanics | **Priority:** High | **Complexity:** High
-- [ ] Develop simulation mode controls | **Priority:** High | **Complexity:** Medium
-- [ ] Design level structure format | **Priority:** Medium | **Complexity:** Medium
-- [ ] Implement basic scoring algorithm | **Priority:** Medium | **Complexity:** Medium
+- 2D rendering of structures and environments
+- Construction system with grid and snap-to-points
+- Visual stress indicators and placement feedback
+- User interface (construction panel, material selection)
+- Collapse animations and visual effects
+- Menu system and visual polish
 
 ---
 
-### Sprint 3: 11/03/2026 – 31/03/2026
+### Epic 3: Game Logic & Core Mechanics
 
-**Duration:** 3 weeks | **Status:** ⚪ Not Started
+**Goal:** Implement game rules, progression, and player experience
 
-#### 🔵 Physics/Simulation
+**Overview:**  
+This epic implements all game logic that connects physics and graphics into a playable experience. It develops the progressive level system, budget and resource mechanics, efficiency-based scoring system, win/loss conditions, level progression and unlocking, tutorial system, and save/load functionality. It also includes difficulty balancing, extensive playtesting, and final documentation.
 
-- [ ] Implement collapse detection and animation | **Priority:** High | **Complexity:** High
-- [ ] Add material properties (steel, wood, cable) | **Priority:** High | **Complexity:** Medium
-- [ ] Develop breaking force thresholds | **Priority:** High | **Complexity:** Medium
-- [ ] Optimize physics calculations | **Priority:** Medium | **Complexity:** High
-- [ ] Add load application system (vehicles, weights) | **Priority:** High | **Complexity:** Medium
+**Key Features:**
 
-#### 🟢 Graphics/UI
-
-- [ ] Implement visual stress indicators (color coding) | **Priority:** High | **Complexity:** Medium
-- [ ] Create construction UI panel | **Priority:** High | **Complexity:** Medium
-- [ ] Add material selection interface | **Priority:** Medium | **Complexity:** Medium
-- [ ] Develop animation system for collapse | **Priority:** High | **Complexity:** High
-- [ ] Implement particle effects for destruction | **Priority:** Low | **Complexity:** Medium
-- [ ] Add visual feedback for valid/invalid placements | **Priority:** High | **Complexity:** Easy
-
-#### 🟡 Game Logic
-
-- [ ] Create 5-10 progressive levels | **Priority:** High | **Complexity:** High
-- [ ] Implement budget/resource system | **Priority:** High | **Complexity:** Medium
-- [ ] Develop scoring system (efficiency, cost, strength) | **Priority:** High | **Complexity:** Medium
-- [ ] Add win/lose conditions | **Priority:** High | **Complexity:** Easy
-- [ ] Implement level progression and unlocking | **Priority:** Medium | **Complexity:** Medium
-- [ ] Create tutorial system | **Priority:** Medium | **Complexity:** Medium
+- Progressive level design (1-10 levels)
+- Budget system and material costs
+- Scoring system and high scores
+- Win/loss conditions and level progression
+- Tutorial system for new players
+- Save/load, playtesting, and final polish
 
 ---
 
-### Sprint 4: 01/04/2026 – 14/04/2026
+## 📅 Sprint Overview
 
-**Duration:** 2 weeks | **Status:** ⚪ Not Started
+### Sprint 1: Foundation & Architecture
 
-#### 🔵 Physics/Simulation
+**Duration:** 02/02/2026 – 17/02/2026 (2 weeks)  
+**Stories:** 12 user stories
 
-- [ ] Fine-tune physics parameters | **Priority:** High | **Complexity:** Medium
-- [ ] Optimize performance for complex structures | **Priority:** High | **Complexity:** High
-- [ ] Test edge cases in physics simulation | **Priority:** High | **Complexity:** Medium
-- [ ] Balance difficulty of structural challenges | **Priority:** Medium | **Complexity:** Medium
+**Sprint Goal:** Complete project foundation, architecture, and research phase
 
-#### 🟢 Graphics/UI
+**Key Deliverables:**
 
-- [ ] Polish visual effects and animations | **Priority:** Medium | **Complexity:** Medium
-- [ ] Improve UI/UX responsiveness | **Priority:** High | **Complexity:** Medium
-- [ ] Add sound effects and audio feedback | **Priority:** Low | **Complexity:** Easy
-- [ ] Implement menu system (main, pause, victory) | **Priority:** High | **Complexity:** Medium
-- [ ] Create visual polish (shadows, highlights) | **Priority:** Low | **Complexity:** Easy
-
-#### 🟡 Game Logic
-
-- [ ] Implement save/load functionality | **Priority:** Medium | **Complexity:** Medium
-- [ ] Add high score tracking | **Priority:** Low | **Complexity:** Easy
-- [ ] Balance level difficulty | **Priority:** High | **Complexity:** Medium
-- [ ] Comprehensive playtesting | **Priority:** High | **Complexity:** Easy
-- [ ] Bug fixing and edge case handling | **Priority:** High | **Complexity:** Medium
-- [ ] Final documentation and code cleanup | **Priority:** Medium | **Complexity:** Easy
+- Project setup and development environment configured
+- Core architecture defined (class structure, module organization)
+- Basic physics engine structure with node/beam system
+- SDL/OpenGL rendering pipeline initialized
+- Game loop and state management implemented
+- Research completed on physics algorithms and rendering techniques
 
 ---
 
-## 📊 Task Summary by Role
+### Sprint 2: Core Systems Implementation
 
-### 🔵 Physics/Simulation (15 tasks)
+**Duration:** 18/02/2026 – 10/03/2026 (3 weeks)  
+**Stories:** 15 user stories
 
-| Sprint   | Tasks   | Status         |
-| -------- | ------- | -------------- |
-| Sprint 1 | 4 tasks | 🟢 In Progress |
-| Sprint 2 | 5 tasks | ⚪ Not Started |
-| Sprint 3 | 5 tasks | ⚪ Not Started |
-| Sprint 4 | 4 tasks | ⚪ Not Started |
+**Sprint Goal:** Implement core systems - physics engine, rendering, and basic gameplay
 
-### 🟢 Graphics/UI (18 tasks)
+**Key Deliverables:**
 
-| Sprint   | Tasks   | Status         |
-| -------- | ------- | -------------- |
-| Sprint 1 | 4 tasks | 🟢 In Progress |
-| Sprint 2 | 5 tasks | ⚪ Not Started |
-| Sprint 3 | 6 tasks | ⚪ Not Started |
-| Sprint 4 | 5 tasks | ⚪ Not Started |
-
-### 🟡 Game Logic (18 tasks)
-
-| Sprint   | Tasks   | Status         |
-| -------- | ------- | -------------- |
-| Sprint 1 | 4 tasks | 🟢 In Progress |
-| Sprint 2 | 5 tasks | ⚪ Not Started |
-| Sprint 3 | 6 tasks | ⚪ Not Started |
-| Sprint 4 | 6 tasks | ⚪ Not Started |
-
-**Total: 51 tasks**
-
-### Priority Distribution
-
-- **High Priority:** 33 tasks (65%)
-- **Medium Priority:** 15 tasks (29%)
-- **Low Priority:** 3 tasks (6%)
-
-### Complexity Distribution
-
-- **High Complexity:** 13 tasks (25%)
-- **Medium Complexity:** 31 tasks (61%)
-- **Easy Complexity:** 7 tasks (14%)
+- Fully functional physics simulation with force calculations
+- Interactive construction system with grid and snap functionality
+- Visual stress indicators showing structural integrity
+- Basic level system with win/lose conditions
+- Construction UI panel with material selection
+- Playable prototype with at least 1 test level
 
 ---
 
-## 🎯 Project Milestones
+### Sprint 3: Feature Completion & Content
 
-- [ ] **Milestone 1:** Core physics engine functional (End of Sprint 2)
-- [ ] **Milestone 2:** Playable prototype with basic graphics (End of Sprint 3)
-- [ ] **Milestone 3:** Complete game with multiple levels (End of Sprint 4)
+**Duration:** 11/03/2026 – 31/03/2026 (3 weeks)  
+**Stories:** 15 user stories
 
----
+**Sprint Goal:** Feature completion - advanced mechanics, levels, and game content
 
-## 🛠️ Technology Stack
+**Key Deliverables:**
 
-- **Language:** C++
-- **Graphics:** _(To be determined)_
-- **Physics Engine:** _(To be determined)_
-- **Build System:** _(To be determined)_
-
----
-
-## 📊 Progress Tracking
-
-### By Role
-
-| Role                      | Completed | In Progress | Not Started | Total  | Progress |
-| ------------------------- | --------- | ----------- | ----------- | ------ | -------- |
-| 🔵 **Physics/Simulation** | 0         | 0           | 15          | 15     | 0%       |
-| 🟢 **Graphics/UI**        | 0         | 0           | 18          | 18     | 0%       |
-| 🟡 **Game Logic**         | 0         | 0           | 18          | 18     | 0%       |
-| **TOTAL**                 | **0**     | **0**       | **51**      | **51** | **0%**   |
-
-### By Component
-
-| Component          | Status         | Progress | Responsible Role   |
-| ------------------ | -------------- | -------- | ------------------ |
-| Physics Engine     | ⚪ Not Started | 0%       | Physics/Simulation |
-| Graphics Rendering | ⚪ Not Started | 0%       | Graphics/UI        |
-| User Interface     | ⚪ Not Started | 0%       | Graphics/UI        |
-| Game Logic Core    | ⚪ Not Started | 0%       | Game Logic         |
-| Level System       | ⚪ Not Started | 0%       | Game Logic         |
-| Scoring System     | ⚪ Not Started | 0%       | Game Logic         |
+- Collapse detection and dramatic failure animations
+- Material system (steel, wood, cable) with unique properties
+- Progressive level design (1-3 playable levels)
+- Budget and resource management system
+- Comprehensive scoring system (efficiency, cost, strength)
+- Particle effects for destruction and visual polish
+- Level progression and unlocking system
 
 ---
 
-## 📝 Meeting Notes
+### Sprint 4: Polish, Testing & Launch
 
-### Week 1 (11/02 - 17/02)
+**Duration:** 01/04/2026 – 14/04/2026 (2 weeks)  
+**Stories:** 15 user stories
 
-- _Add meeting notes here_
+**Sprint Goal:** Polish, optimization, testing, and launch preparation
+
+**Key Deliverables:**
+
+- Performance optimization for complex structures (1000+ components)
+- Menu system (main menu, pause, victory/defeat screens)
+- Sound effects and audio feedback
+- Save/load functionality
+- Comprehensive playtesting and bug fixing
+- Final documentation and user manual
+- Polished, production-ready game
 
 ---
 
 ## 🔗 Resources
 
-- Project Repository: _(Add link)_
-- Documentation: _(Add link)_
-- Task Board: _(Add link)_
+- Project Repository: _https://github.com/fcl2002/Bridge-Builder_
+- Documentation: _https://github.com/fcl2002/Bridge-Builder/blob/main/README.md_
+- Task Board: _https://github.com/users/fcl2002/projects/7/views/1_
 
 ---
 
-## 📞 Contact & Communication
+## 📚 Documentation Structure
 
-- **Team Communication:** _(Add channel/tool)_
-- **Meeting Schedule:** _(Add schedule)_
+This project follows Agile/Scrum methodology with:
+
+- **3 Epics** organized by system component
+- **59 User Stories** with acceptance criteria
 
 ---
 
-**Last Updated:** February 11, 2026
+**Last Updated:** February 11, 2026  
+**Methodology:** Agile/Scrum with Epic & User Story Framework
