@@ -1,5 +1,28 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
+#include <vector>
+#include <algorithm>
+
+// Check if a point is inside a polygon using ray casting algorithm
+bool isPointInPolygon(const sf::Vector2f& point, const std::vector<sf::Vector2f>& polygon) {
+    int intersections = 0;
+    size_t n = polygon.size();
+    
+    for (size_t i = 0; i < n; i++) {
+        sf::Vector2f p1 = polygon[i];
+        sf::Vector2f p2 = polygon[(i + 1) % n];
+        
+        // Check if ray from point going right intersects edge
+        if ((p1.y > point.y) != (p2.y > point.y)) {
+            float xIntersection = (p2.x - p1.x) * (point.y - p1.y) / (p2.y - p1.y) + p1.x;
+            if (point.x < xIntersection) {
+                intersections++;
+            }
+        }
+    }
+    
+    return (intersections % 2) == 1;
+}
 
 int main() {
     // Create window
@@ -13,13 +36,13 @@ int main() {
     // Inclined ground (triangle)
     sf::ConvexShape slopeLeft;
     slopeLeft.setPointCount(7);
-    slopeLeft.setPoint(0, sf::Vector2f(  0, 400+40));     // top left
+    slopeLeft.setPoint(0, sf::Vector2f(  0, 400+40));   // top left
     slopeLeft.setPoint(1, sf::Vector2f(150, 400+40));   // top right
     slopeLeft.setPoint(2, sf::Vector2f(270, 560+40));   // bottom right
     slopeLeft.setPoint(3, sf::Vector2f(248, 564+40));   // bottom right
     slopeLeft.setPoint(4, sf::Vector2f(224, 568+40));   // bottom right
     slopeLeft.setPoint(5, sf::Vector2f(200, 572+40));   // bottom right
-    slopeLeft.setPoint(6, sf::Vector2f(  0, 575+40));     // bottom left
+    slopeLeft.setPoint(6, sf::Vector2f(  0, 575+40));   // bottom left
     slopeLeft.setFillColor(sf::Color(143, 163, 90)); // green
 
     // Dark gray bridge - left side
@@ -38,10 +61,6 @@ int main() {
     sf::RectangleShape rect(sf::Vector2f(674, 20));
     rect.setPosition(sf::Vector2f(303, 440));
     rect.setFillColor(sf::Color(80, 80, 80)); // dark gray
-
-    // sf::RectangleShape squareRight(sf::Vector2f(40, 20));
-    // squareRight.setPosition(sf::Vector2f(1200-303+40, 400));
-    // squareRight.setFillColor(sf::Color(80, 80, 80)); // dark gray (shadow)
 
     // River
     sf::ConvexShape river;
@@ -87,6 +106,33 @@ int main() {
 
     // Variable to control the mode
     bool editMode = false;
+
+    // Manual grid boundary definition - Define your polygon points here
+    // You can define any polygon shape, just like slopeRight, river, etc.
+    std::vector<sf::Vector2f> gridBoundaryPoints = {
+        {0.0f, 0.0f},      // Point 1 - top left
+        {1200.0f, 0.0f},   // Point 2
+        {1200.0f, 440.0f}, // Point 3
+        {960.0f, 440.0f},  // Point 4
+        {960.0f, 560.0f},  // Point 5
+        {320.0f, 560.0f},  // Point 6
+        {320.0f, 440.0f},  // Point 7
+        {0.0f, 440.0f},    // Point 8
+    };
+    
+    // Calculate grid rectangular bounds from the 8 points
+    float minX = gridBoundaryPoints[0].x, maxX = gridBoundaryPoints[0].x;
+    float minY = gridBoundaryPoints[0].y, maxY = gridBoundaryPoints[0].y;
+    for (const auto& point : gridBoundaryPoints) {
+        if (point.x < minX) minX = point.x;
+        if (point.x > maxX) maxX = point.x;
+        if (point.y < minY) minY = point.y;
+        if (point.y > maxY) maxY = point.y;
+    }
+    int gridLeft = (int)minX;
+    int gridTop = (int)minY;
+    int gridWidth = (int)(maxX - minX);
+    int gridHeight = (int)(maxY - minY);
 
     // Load font for button text
     sf::Font font;
@@ -174,7 +220,8 @@ int main() {
 
             // Handle mouse clicks
             if (event->is<sf::Event::MouseButtonPressed>()) {
-                if (event->getIf<sf::Event::MouseButtonPressed>()->button == sf::Mouse::Button::Left) {
+                auto mouseEvent = event->getIf<sf::Event::MouseButtonPressed>();
+                if (mouseEvent->button == sf::Mouse::Button::Left) {
                     if (isButtonHovered) {
                         editMode = !editMode; // Toggle build mode
                     }
@@ -205,28 +252,81 @@ int main() {
         window.draw(buttonText);
 
         if (editMode) {
-            // Define editable area (example: from x=150 to x=1050, y=400 to y=800)
-            int gridLeft = 0, gridTop = 0, gridWidth = 1200, gridHeight = 560;
             int cellSize = 40;
-            sf::Color gridColor(0, 0, 0, 60); // semi-transparent black
+            sf::Color gridColor(0, 0, 0, 80); // semi-transparent black
 
+            // Draw grid lines only within the polygon
             // Vertical lines
             for (int x = gridLeft; x <= gridLeft + gridWidth; x += cellSize) {
-                sf::Vertex line[2];
-                line[0].position = sf::Vector2f((float)x, (float)gridTop);
-                line[0].color = gridColor;
-                line[1].position = sf::Vector2f((float)x, (float)(gridTop + gridHeight));
-                line[1].color = gridColor;
-                window.draw(line, 2, sf::PrimitiveType::Lines);
+                // Collect all intersection points of this vertical line with polygon
+                std::vector<float> intersectionY;
+                
+                for (size_t i = 0; i < gridBoundaryPoints.size(); i++) {
+                    sf::Vector2f p1 = gridBoundaryPoints[i];
+                    sf::Vector2f p2 = gridBoundaryPoints[(i + 1) % gridBoundaryPoints.size()];
+                    
+                    // Check if vertical line x intersects edge p1-p2
+                    if ((p1.x <= x && p2.x >= x) || (p1.x >= x && p2.x <= x)) {
+                        if (std::abs(p2.x - p1.x) > 0.001f) {
+                            float y = p1.y + (p2.y - p1.y) * (x - p1.x) / (p2.x - p1.x);
+                            intersectionY.push_back(y);
+                        }
+                    }
+                }
+                
+                // Sort intersections and draw line segments
+                std::sort(intersectionY.begin(), intersectionY.end());
+                for (size_t i = 0; i + 1 < intersectionY.size(); i += 2) {
+                    sf::Vertex line[2];
+                    line[0].position = sf::Vector2f((float)x, intersectionY[i]);
+                    line[0].color = gridColor;
+                    line[1].position = sf::Vector2f((float)x, intersectionY[i + 1]);
+                    line[1].color = gridColor;
+                    window.draw(line, 2, sf::PrimitiveType::Lines);
+                }
             }
+            
             // Horizontal lines
             for (int y = gridTop; y <= gridTop + gridHeight; y += cellSize) {
-                sf::Vertex line[2];
-                line[0].position = sf::Vector2f((float)gridLeft, (float)y);
-                line[0].color = gridColor;
-                line[1].position = sf::Vector2f((float)(gridLeft + gridWidth), (float)y);
-                line[1].color = gridColor;
-                window.draw(line, 2, sf::PrimitiveType::Lines);
+                // Collect all intersection points of this horizontal line with polygon
+                std::vector<float> intersectionX;
+                
+                for (size_t i = 0; i < gridBoundaryPoints.size(); i++) {
+                    sf::Vector2f p1 = gridBoundaryPoints[i];
+                    sf::Vector2f p2 = gridBoundaryPoints[(i + 1) % gridBoundaryPoints.size()];
+                    
+                    // Check if horizontal line y intersects edge p1-p2
+                    if ((p1.y <= y && p2.y >= y) || (p1.y >= y && p2.y <= y)) {
+                        if (std::abs(p2.y - p1.y) > 0.001f) {
+                            float x = p1.x + (p2.x - p1.x) * (y - p1.y) / (p2.y - p1.y);
+                            intersectionX.push_back(x);
+                        }
+                    }
+                }
+                
+                // Sort intersections and draw line segments
+                std::sort(intersectionX.begin(), intersectionX.end());
+                for (size_t i = 0; i + 1 < intersectionX.size(); i += 2) {
+                    sf::Vertex line[2];
+                    line[0].position = sf::Vector2f(intersectionX[i], (float)y);
+                    line[0].color = gridColor;
+                    line[1].position = sf::Vector2f(intersectionX[i + 1], (float)y);
+                    line[1].color = gridColor;
+                    window.draw(line, 2, sf::PrimitiveType::Lines);
+                }
+            }
+            
+            // Draw the boundary outline
+            if (gridBoundaryPoints.size() >= 3) {
+                for (size_t i = 0; i < gridBoundaryPoints.size(); i++) {
+                    size_t next = (i + 1) % gridBoundaryPoints.size();
+                    sf::Vertex boundaryLine[2];
+                    boundaryLine[0].position = gridBoundaryPoints[i];
+                    boundaryLine[0].color = sf::Color(0, 200, 0, 255); // Bright green
+                    boundaryLine[1].position = gridBoundaryPoints[next];
+                    boundaryLine[1].color = sf::Color(0, 200, 0, 255);
+                    window.draw(boundaryLine, 2, sf::PrimitiveType::Lines);
+                }
             }
         }
 
