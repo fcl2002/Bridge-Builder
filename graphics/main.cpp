@@ -104,7 +104,7 @@ int main() {
     slopeRight.setPoint(6, sf::Vector2f(1200 + 80, 575+40));         // bottom right
     slopeRight.setFillColor(sf::Color(143, 163, 90)); // green
 
-    // Variable to control the mode
+    // Game mode: false = BUILD mode (shows grid), true = PLAY mode (runs simulation)
     bool editMode = false;
 
     // Manual grid boundary definition - Define your polygon points here
@@ -134,23 +134,20 @@ int main() {
     int gridWidth = (int)(maxX - minX);
     int gridHeight = (int)(maxY - minY);
 
-    // Load font for button text
+    // Load pixel font for retro game style
     sf::Font font;
-    if (!font.openFromFile("C:/Windows/Fonts/arial.ttf")) {
-        // If Arial not found, try another common font
-        if (!font.openFromFile("C:/Windows/Fonts/calibri.ttf")) {
-            return -1; // Cannot load font
-        }
+    if (!font.openFromFile("assets/Press_Start_2P/PressStart2P-Regular.ttf")) {
+        return -1; // Cannot load font
     }
 
-    // Button text
+    // Button text with pixel font styling
     sf::Text buttonText(font);
     buttonText.setString("BUILD");
-    buttonText.setCharacterSize(24);
+    buttonText.setCharacterSize(18); // Smaller size for pixel fonts
     buttonText.setFillColor(sf::Color::White);
 
     // Button padding
-    const float paddingX = 20.0f; // Left and right padding
+    const float paddingX = 15.0f; // Left and right padding
     const float paddingY = 10.0f; // Top and bottom padding
 
     // Calculate button size based on text bounds + padding
@@ -160,7 +157,7 @@ int main() {
 
     // Build mode button
     sf::RectangleShape buildButton({buttonWidth, buttonHeight});
-    buildButton.setPosition({20.0f, 20.0f});
+    buildButton.setPosition({40.0f, 10.0f});
     buildButton.setFillColor(sf::Color(70, 130, 180)); // Steel blue
     buildButton.setOutlineThickness(2.0f);
     buildButton.setOutlineColor(sf::Color(30, 80, 130));
@@ -185,18 +182,14 @@ int main() {
         
         // Update button appearance based on hover state
         if (isButtonHovered) {
-            buildButton.setFillColor(sf::Color(100, 160, 210)); // Lighter blue on hover
+            buildButton.setFillColor(sf::Color(23, 61, 99)); // Lighter blue on hover
         } else {
-            if (editMode) {
-                buildButton.setFillColor(sf::Color(50, 200, 50)); // Green when active
-            } else {
-                buildButton.setFillColor(sf::Color(70, 130, 180)); // Default blue
-            }
+            buildButton.setFillColor(sf::Color(70, 130, 180)); // Default blue
         }
         
         // Update button text and size based on mode
         if (editMode) {
-            buttonText.setString("Building...");
+            buttonText.setString("PLAY");
         } else {
             buttonText.setString("BUILD");
         }
@@ -204,7 +197,7 @@ int main() {
         // Recalculate button size and position text with padding
         sf::FloatRect textBounds = buttonText.getLocalBounds();
         float buttonWidth = textBounds.size.x + 2 * paddingX;
-        float buttonHeight = textBounds.size.y + 2 * paddingY + 10.0f;
+        float buttonHeight = textBounds.size.y + 2 * paddingY;
         buildButton.setSize({buttonWidth, buttonHeight});
         
         buttonText.setPosition({
@@ -228,9 +221,9 @@ int main() {
                 }
             }
 
-            // Keep keyboard shortcut
+            // Keyboard shortcut: 'B' to toggle build/play mode
             if (event->is<sf::Event::KeyPressed>()) {
-                if (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::E) {
+                if (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::B) {
                     editMode = !editMode;
                 }
             }
@@ -246,10 +239,6 @@ int main() {
         window.draw(slopeRight);
         window.draw(darkGrayBridgeRight);
         window.draw(rect);
-
-        // Draw UI button and text on top
-        window.draw(buildButton);
-        window.draw(buttonText);
 
         if (editMode) {
             int cellSize = 40;
@@ -329,6 +318,10 @@ int main() {
                 }
             }
         }
+
+        // Draw UI button and text on top
+        window.draw(buildButton);
+        window.draw(buttonText);
 
         // Display everything
         window.display();
