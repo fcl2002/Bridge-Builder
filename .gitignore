@@ -4,5 +4,9 @@ import_sprint3.ps1
 import_sprint4.ps1
 
 # Graphics
+*.bat
 *.dll
+*.exe
 graphics/SETUP_COMPLETE.md
+kenney_platformer-pack-redux/
+graphics/assets/textures/spritesheet_ground.xml
