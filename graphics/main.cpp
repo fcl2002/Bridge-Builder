@@ -11,28 +11,37 @@ int main() {
     grass.setFillColor(sf::Color(110, 130, 70)); // dark green
 
     // Inclined ground (triangle)
-    sf::ConvexShape slope;
-    slope.setPointCount(7);
-    slope.setPoint(0, sf::Vector2f(0, 400));     // top left
-    slope.setPoint(1, sf::Vector2f(150, 400));   // top right
-    slope.setPoint(2, sf::Vector2f(270, 560));   // bottom right
-    slope.setPoint(3, sf::Vector2f(248, 564));   // bottom right
-    slope.setPoint(4, sf::Vector2f(224, 568));   // bottom right
-    slope.setPoint(5, sf::Vector2f(200, 572));   // bottom right
-    slope.setPoint(6, sf::Vector2f(0, 575));     // bottom left
-    slope.setFillColor(sf::Color(143, 163, 90)); // green
+    sf::ConvexShape slopeLeft;
+    slopeLeft.setPointCount(7);
+    slopeLeft.setPoint(0, sf::Vector2f(0, 400));     // top left
+    slopeLeft.setPoint(1, sf::Vector2f(150, 400));   // top right
+    slopeLeft.setPoint(2, sf::Vector2f(270, 560));   // bottom right
+    slopeLeft.setPoint(3, sf::Vector2f(248, 564));   // bottom right
+    slopeLeft.setPoint(4, sf::Vector2f(224, 568));   // bottom right
+    slopeLeft.setPoint(5, sf::Vector2f(200, 572));   // bottom right
+    slopeLeft.setPoint(6, sf::Vector2f(0, 575));     // bottom left
+    slopeLeft.setFillColor(sf::Color(143, 163, 90)); // green
 
-    // Dark gray bridge
-    sf::ConvexShape darkGrayBridge;
-    darkGrayBridge.setPointCount(7);
-    darkGrayBridge.setPoint(0, sf::Vector2f(150, 400));
-    darkGrayBridge.setPoint(1, sf::Vector2f(303, 400));
-    darkGrayBridge.setPoint(2, sf::Vector2f(303, 420));
-    darkGrayBridge.setPoint(3, sf::Vector2f(343, 420));
-    darkGrayBridge.setPoint(4, sf::Vector2f(343, 550));
-    darkGrayBridge.setPoint(5, sf::Vector2f(330, 560));
-    darkGrayBridge.setPoint(6, sf::Vector2f(270, 560));
-    darkGrayBridge.setFillColor(sf::Color(50, 50, 50)); // dark gray
+    // Dark gray bridge - left side
+    sf::ConvexShape darkGrayBridgeLeft;
+    darkGrayBridgeLeft.setPointCount(7);
+    darkGrayBridgeLeft.setPoint(0, sf::Vector2f(150, 400));
+    darkGrayBridgeLeft.setPoint(1, sf::Vector2f(303, 400));
+    darkGrayBridgeLeft.setPoint(2, sf::Vector2f(303, 420));
+    darkGrayBridgeLeft.setPoint(3, sf::Vector2f(343, 420));
+    darkGrayBridgeLeft.setPoint(4, sf::Vector2f(343, 550));
+    darkGrayBridgeLeft.setPoint(5, sf::Vector2f(330, 560));
+    darkGrayBridgeLeft.setPoint(6, sf::Vector2f(270, 560));
+    darkGrayBridgeLeft.setFillColor(sf::Color(50, 50, 50)); // dark gray
+
+    // Small square to say where the bridge starts
+    sf::RectangleShape squareLeft(sf::Vector2f(674, 20));
+    squareLeft.setPosition(sf::Vector2f(303, 400));
+    squareLeft.setFillColor(sf::Color(80, 80, 80)); // dark gray (shadow)
+
+    // sf::RectangleShape squareRight(sf::Vector2f(40, 20));
+    // squareRight.setPosition(sf::Vector2f(1200-303+40, 400));
+    // squareRight.setFillColor(sf::Color(80, 80, 80)); // dark gray (shadow)
 
     // River
     sf::ConvexShape river;
@@ -52,6 +61,30 @@ int main() {
     river.setPoint(12, sf::Vector2f(260, 455));
     river.setFillColor(sf::Color(100, 149, 237)); // river blue
 
+    // Right side - mirrored dark gray bridge
+    sf::ConvexShape darkGrayBridgeRight;
+    darkGrayBridgeRight.setPointCount(7);
+    darkGrayBridgeRight.setPoint(0, sf::Vector2f(1200-150+80, 400));
+    darkGrayBridgeRight.setPoint(1, sf::Vector2f(1200-303+80, 400));
+    darkGrayBridgeRight.setPoint(2, sf::Vector2f(1200-303+80, 420));
+    darkGrayBridgeRight.setPoint(3, sf::Vector2f(1200-343+80, 420));
+    darkGrayBridgeRight.setPoint(4, sf::Vector2f(1200-343+80, 550));
+    darkGrayBridgeRight.setPoint(5, sf::Vector2f(1200-330+80, 560));
+    darkGrayBridgeRight.setPoint(6, sf::Vector2f(1200-270+80, 560));
+    darkGrayBridgeRight.setFillColor(sf::Color(50, 50, 50)); // dark gray
+
+    // Right side - mirrored slope
+    sf::ConvexShape slopeRight;
+    slopeRight.setPointCount(7);
+    slopeRight.setPoint(0, sf::Vector2f(1200 + 80, 400));         // top right
+    slopeRight.setPoint(1, sf::Vector2f(1200 - 150 + 80, 400));   // top left
+    slopeRight.setPoint(2, sf::Vector2f(1200 - 270 + 80, 560));   // bottom left
+    slopeRight.setPoint(3, sf::Vector2f(1200 - 248 + 80, 564));   // bottom left
+    slopeRight.setPoint(4, sf::Vector2f(1200 - 224 + 80, 568));   // bottom left
+    slopeRight.setPoint(5, sf::Vector2f(1200 - 200 + 80, 572));   // bottom left
+    slopeRight.setPoint(6, sf::Vector2f(1200 + 80, 575));         // bottom right
+    slopeRight.setFillColor(sf::Color(143, 163, 90)); // green
+
     // Main game loop
     while (window.isOpen()) {
         // Process events
@@ -67,9 +100,13 @@ int main() {
         window.clear(sf::Color(173, 216, 230));
 
         window.draw(grass);
-        window.draw(slope);
+        window.draw(slopeLeft);
         window.draw(river);
-        window.draw(darkGrayBridge);
+        window.draw(darkGrayBridgeLeft);
+        window.draw(slopeRight);
+        window.draw(darkGrayBridgeRight);
+        window.draw(squareLeft);
+        // window.draw(squareRight);
 
         // Display everything
         window.display();

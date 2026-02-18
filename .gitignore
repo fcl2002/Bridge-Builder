@@ -9,4 +9,4 @@ import_sprint4.ps1
 *.exe
 graphics/SETUP_COMPLETE.md
 kenney_platformer-pack-redux/
-graphics/assets/textures/spritesheet_ground.xml
+graphics/main.exe
