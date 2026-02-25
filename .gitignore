@@ -2,3 +2,5 @@ import_epics_to_github.ps1
 import_sprint2.ps1
 import_sprint3.ps1
 import_sprint4.ps1
+
+*.dia~
