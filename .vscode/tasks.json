@@ -25,9 +25,9 @@
       "args": [
         "-IC:/SFML-3.0.2/include",
         "graphics/main.cpp",
-        "graphics/src/Button.cpp",
         "graphics/src/Scene.cpp",
-        "graphics/src/Grid.cpp",
+        "graphics/src/Car.cpp",
+        "graphics/src/HUD.cpp",
         "-LC:/SFML-3.0.2/lib",
         "-lsfml-graphics",
         "-lsfml-window",

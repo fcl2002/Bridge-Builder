@@ -12,7 +12,7 @@ Button::Button(const sf::Font& font, const std::string& label, sf::Vector2f posi
     // Calculate button size based on text
     sf::FloatRect textBounds = text.getLocalBounds();
     float buttonWidth = textBounds.size.x + 2 * PADDING_X;
-    float buttonHeight = textBounds.size.y + 2 * PADDING_Y + 10.0f;
+    float buttonHeight = textBounds.size.y + 2 * PADDING_Y;
 
     // Setup shape
     shape.setSize({buttonWidth, buttonHeight});
@@ -39,12 +39,27 @@ void Button::setText(const std::string& newText) {
     // Recalculate size
     sf::FloatRect textBounds = text.getLocalBounds();
     float buttonWidth = textBounds.size.x + 2 * PADDING_X;
-    float buttonHeight = textBounds.size.y + 2 * PADDING_Y + 10.0f;
+    float buttonHeight = textBounds.size.y + 2 * PADDING_Y;
     shape.setSize({buttonWidth, buttonHeight});
     
     // Reposition text
     text.setPosition({
         shape.getPosition().x + PADDING_X,
+        shape.getPosition().y + PADDING_Y
+    });
+}
+
+void Button::setTextKeepSize(const std::string& newText) {
+    text.setString(newText);
+    
+    // Center text horizontally within button
+    sf::FloatRect textBounds = text.getLocalBounds();
+    float buttonWidth = shape.getSize().x;
+    float textWidth = textBounds.size.x;
+    float centerX = shape.getPosition().x + (buttonWidth - textWidth) / 2.0f;
+    
+    text.setPosition({
+        centerX,
         shape.getPosition().y + PADDING_Y
     });
 }

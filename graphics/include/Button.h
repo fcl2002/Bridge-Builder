@@ -24,6 +24,7 @@ public:
 
     void setCallback(std::function<void()> callback);
     void setText(const std::string& newText);
+    void setTextKeepSize(const std::string& newText); // Update text without resizing
     void update(const sf::Vector2i& mousePos);
     void handleClick(const sf::Vector2i& mousePos);
     void draw(sf::RenderWindow& window);

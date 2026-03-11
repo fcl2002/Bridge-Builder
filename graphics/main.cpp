@@ -1,90 +1,64 @@
 #include <SFML/Graphics.hpp>
-#include "include/Button.h"
 #include "include/Scene.h"
-#include "include/Grid.h"
+#include "include/HUD.h"
 
 int main() {
-    // Create window
     sf::RenderWindow window(sf::VideoMode({1200, 800}), "Bridge Builder - Game");
 
-    // Load font
     sf::Font font;
-    if (!font.openFromFile("assets/Press_Start_2P/PressStart2P-Regular.ttf")) {
+    if (!font.openFromFile("assets/Press_Start_2P/PressStart2P-Regular.ttf"))
         return -1;
-    }
 
-    // Create scene
     Scene scene;
 
     // Game state
-    bool editMode = false;
+    bool simRunning   = false;
+    int  currentLevel = 1;
+    int  budget       = 1000;
+    int  score        = 0;
 
-    // Create buttons
-    Button buildButton(font, "BUILD", {10.0f, 10.0f});
-    buildButton.setCallback([&editMode, &buildButton]() {
-        editMode = !editMode;
-        buildButton.setText(editMode ? "PLAY" : "BUILD");
-    });
+    HUD hud(font, currentLevel, score, budget);
 
-    Button levelButton(font, "LEVEL", {10.0f + buildButton.getWidth() + 20.0f, 10.0f});
-    // levelButton.setCallback([](){ /* TODO: Implementar seleção de levels */ });
+    // Sky gradient
+    sf::VertexArray sky(sf::PrimitiveType::TriangleStrip, 4);
+    sky[0].position = sf::Vector2f(   0,   0);  sky[1].position = sf::Vector2f(1200,   0);
+    sky[2].position = sf::Vector2f(   0, 800);  sky[3].position = sf::Vector2f(1200, 800);
+    sky[0].color = sky[1].color = sf::Color( 80, 193, 198);
+    sky[2].color = sky[3].color = sf::Color(200, 235, 240);
 
-    // Create grid
-    std::vector<sf::Vector2f> gridBoundary = {
-        {0.0f, 0.0f},
-        {1200.0f, 0.0f},
-        {1200.0f, 440.0f},
-        {960.0f, 440.0f},
-        {960.0f, 560.0f},
-        {320.0f, 560.0f},
-        {320.0f, 440.0f},
-        {0.0f, 440.0f}
-    };
-    Grid grid(gridBoundary);
-
-    // Main game loop
     while (window.isOpen()) {
-        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+        sf::Vector2f mouseF(sf::Mouse::getPosition(window));
 
-        // Update buttons
-        buildButton.update(mousePos);
-        levelButton.update(mousePos);
-
-        // Process events
         while (auto event = window.pollEvent()) {
-            if (event->is<sf::Event::Closed>()) {
+            if (event->is<sf::Event::Closed>())
                 window.close();
-            }
 
             if (event->is<sf::Event::MouseButtonPressed>()) {
-                auto mouseEvent = event->getIf<sf::Event::MouseButtonPressed>();
-                if (mouseEvent->button == sf::Mouse::Button::Left) {
-                    buildButton.handleClick(mousePos);
-                    levelButton.handleClick(mousePos);
+                auto& me = *event->getIf<sf::Event::MouseButtonPressed>();
+                if (me.button == sf::Mouse::Button::Left) {
+                    std::string action = hud.handleClick(mouseF);
+                    if (action == "play") {
+                        simRunning = !simRunning;
+                    } else if (action == "reset") {
+                        simRunning = false;
+                        score  = 0;
+                        budget = 1000;
+                        hud.update(score, budget);
+                    }
                 }
             }
 
-            // Keyboard shortcut: 'B' to toggle build/play mode
             if (event->is<sf::Event::KeyPressed>()) {
-                if (event->getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::B) {
-                    editMode = !editMode;
-                    buildButton.setText(editMode ? "PLAY" : "BUILD");
-                }
+                auto code = event->getIf<sf::Event::KeyPressed>()->code;
+                if (code == sf::Keyboard::Key::Escape)
+                    hud.handleKeyEscape();
             }
         }
 
-        // Render
-        window.clear(sf::Color(173, 216, 230)); // Sky blue
-
+        window.clear();
+        window.draw(sky);
         scene.draw(window);
-
-        if (editMode) {
-            grid.draw(window);
-        }
-
-        buildButton.draw(window);
-        levelButton.draw(window);
-
+        hud.draw(window, simRunning);
         window.display();
     }
 
