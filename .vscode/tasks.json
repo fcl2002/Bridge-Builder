@@ -24,7 +24,7 @@
       "command": "g++",
       "args": [
         "-IC:/SFML-3.0.2/include",
-        "graphics/main_modular.cpp",
+        "graphics/main.cpp",
         "graphics/src/Button.cpp",
         "graphics/src/Scene.cpp",
         "graphics/src/Grid.cpp",
