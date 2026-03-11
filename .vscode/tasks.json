@@ -15,6 +15,26 @@
         "-o",
         "${fileDirname}/main.exe"
       ],
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "build SFML Modular",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-IC:/SFML-3.0.2/include",
+        "graphics/main_modular.cpp",
+        "graphics/src/Button.cpp",
+        "graphics/src/Scene.cpp",
+        "graphics/src/Grid.cpp",
+        "-LC:/SFML-3.0.2/lib",
+        "-lsfml-graphics",
+        "-lsfml-window",
+        "-lsfml-system",
+        "-o",
+        "graphics/main.exe"
+      ],
       "group": {
         "kind": "build",
         "isDefault": true

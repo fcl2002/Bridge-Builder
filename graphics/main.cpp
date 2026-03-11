@@ -168,23 +168,56 @@ int main() {
         buildButton.getPosition().y + paddingY
     });
 
+    // Level button
+    sf::Text levelButtonText(font);
+    levelButtonText.setString("LEVEL");
+    levelButtonText.setCharacterSize(18);
+    levelButtonText.setFillColor(sf::Color::White);
+
+    // Calculate level button size
+    sf::FloatRect levelTextBounds = levelButtonText.getLocalBounds();
+    float levelButtonWidth = levelTextBounds.size.x + 2 * paddingX;
+    float levelButtonHeight = levelTextBounds.size.y + 2 * paddingY + 10.0f;
+
+    sf::RectangleShape levelButton({levelButtonWidth, levelButtonHeight});
+    levelButton.setPosition({buildButton.getPosition().x + buttonWidth + 20.0f, 10.0f}); // 20px de espaçamento
+    levelButton.setFillColor(sf::Color(70, 130, 180)); // Mesma cor do BUILD
+    levelButton.setOutlineThickness(2.0f);
+    levelButton.setOutlineColor(sf::Color(30, 80, 130)); // Mesma cor do BUILD
+
+    // Position level text with padding
+    levelButtonText.setPosition({
+        levelButton.getPosition().x + paddingX,
+        levelButton.getPosition().y + paddingY
+    });
+
     // Mouse hover state
     bool isButtonHovered = false;
+    bool isLevelButtonHovered = false;
 
     // Main game loop
     while (window.isOpen()) {
         // Get mouse position
         sf::Vector2i mousePos = sf::Mouse::getPosition(window);
         sf::FloatRect buttonBounds = buildButton.getGlobalBounds();
+        sf::FloatRect levelButtonBounds = levelButton.getGlobalBounds();
         
-        // Check if mouse is hovering over button
+        // Check if mouse is hovering over buttons
         isButtonHovered = buttonBounds.contains(sf::Vector2f(mousePos));
+        isLevelButtonHovered = levelButtonBounds.contains(sf::Vector2f(mousePos));
         
         // Update button appearance based on hover state
         if (isButtonHovered) {
-            buildButton.setFillColor(sf::Color(23, 61, 99)); // Lighter blue on hover
+            buildButton.setFillColor(sf::Color(23, 61, 99)); // Darker blue on hover
         } else {
             buildButton.setFillColor(sf::Color(70, 130, 180)); // Default blue
+        }
+        
+        // Update level button appearance based on hover state
+        if (isLevelButtonHovered) {
+            levelButton.setFillColor(sf::Color(99, 61, 23)); // Darker brown on hover
+        } else {
+            levelButton.setFillColor(sf::Color(180, 130, 70)); // Default brown
         }
         
         // Update button text and size based on mode
@@ -319,9 +352,11 @@ int main() {
             }
         }
 
-        // Draw UI button and text on top
+        // Draw UI buttons and text on top
         window.draw(buildButton);
         window.draw(buttonText);
+        window.draw(levelButton);
+        window.draw(levelButtonText);
 
         // Display everything
         window.display();
