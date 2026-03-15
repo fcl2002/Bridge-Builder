@@ -1,3 +1,4 @@
+#include <iostream>
 #include "../include/HUD.h"
 #include <SFML/Graphics/Text.hpp>
 
@@ -69,24 +70,26 @@ HUD::HUD(const sf::Font& font, int level, int score, int budget)
     resetBg.setOutlineThickness(2.0f);
 
     // Load refresh icon
-    if (loadTextureFromAny(resetTexture, {
+    bool loadedReset = loadTextureFromAny(resetTexture, {
         "assets/icons/refresh-icon.png",
         "graphics/assets/icons/refresh-icon.png",
-        "assets/icons/refresh-icon.png",
-        "graphics/assets/icons/refresh-icon.png"
-    })) {
+        "assets/textures/refresh-icon.png",
+        "graphics/assets/textures/refresh-icon.png"
+    });
+    if (loadedReset) {
+        std::cout << "[OK] Loaded reset icon.\n";
         resetSprite = std::make_unique<sf::Sprite>(resetTexture);
-        // Padding in pixels
         const float padding = 6.0f;
         float iconTargetSize = BTN_SIZE - 2 * padding;
         float scaleX = iconTargetSize / static_cast<float>(resetTexture.getSize().x);
         float scaleY = iconTargetSize / static_cast<float>(resetTexture.getSize().y);
         resetSprite->setScale(sf::Vector2f(scaleX, scaleY));
-        // Center the icon inside the button
         sf::Vector2f pos = resetBg.getPosition();
         pos.x += padding;
         pos.y += padding;
         resetSprite->setPosition(pos);
+    } else {
+        std::cout << "[ERROR] Failed to load reset icon (refresh-icon.png).\n";
     }
 
     // ---- Hamburger ----
@@ -110,25 +113,27 @@ HUD::HUD(const sf::Font& font, int level, int score, int budget)
     woodBg.setOutlineThickness(2.0f);
 
     // Load wood icon
-    if (loadTextureFromAny(woodTexture, {
+    bool loadedWood = loadTextureFromAny(woodTexture, {
         "assets/icons/wood.png",
         "graphics/assets/icons/wood.png",
-        "assets/icons/wood.png",
-        "graphics/assets/icons/wood.png"
-    })) {
+        "assets/textures/wood.png",
+        "graphics/assets/textures/wood.png"
+    });
+    if (loadedWood) {
+        std::cout << "[OK] Loaded wood icon.\n";
         woodSprite = std::make_unique<sf::Sprite>(woodTexture);
-        // Padding for the icon
         const float padding = 8.0f;
         float iconTargetWidth = woodBg.getSize().x - 2 * padding;
         float iconTargetHeight = woodBg.getSize().y - 2 * padding;
         float scaleX = iconTargetWidth / static_cast<float>(woodTexture.getSize().x);
         float scaleY = iconTargetHeight / static_cast<float>(woodTexture.getSize().y);
         woodSprite->setScale(sf::Vector2f(scaleX, scaleY));
-        // Center the icon inside the button
         sf::Vector2f pos = woodBg.getPosition();
         pos.x += padding;
         pos.y += padding;
         woodSprite->setPosition(pos);
+    } else {
+        std::cout << "[ERROR] Failed to load wood icon (wood.png).\n";
     }
 
     // ---- Menu overlay ----

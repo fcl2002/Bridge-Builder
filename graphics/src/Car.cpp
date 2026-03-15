@@ -43,10 +43,10 @@ Car::Car(sf::Vector2f pos) {
     addBlock(o,  1, 4, 10, 1, ORANGE_ACC);
 
     // ---- Headlights (row 4-5, col 1) ----
-    addBlock(o,  1, 4,  1, 2, HEADLIGHT);
+    addBlock(o,  1, 4,  1, 2, LIGHT_RED);
 
     // ---- Rear lights (row 4-5, col 10) ----
-    addBlock(o, 10, 4,  1, 2, LIGHT_RED);
+    addBlock(o, 10, 4,  1, 2, HEADLIGHT);
 
     // ---- Black outline bottom ----
     addBlock(o,  1, 6, 10, 1, BLACK);
