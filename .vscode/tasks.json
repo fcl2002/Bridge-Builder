@@ -29,6 +29,7 @@
         "graphics/src/Car.cpp",
         "graphics/src/HUD.cpp",
         "graphics/src/Level.cpp",
+        "graphics/src/Level2.cpp",
         "-LC:/SFML-3.0.2/lib",
         "-lsfml-graphics",
         "-lsfml-window",

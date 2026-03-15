@@ -18,10 +18,7 @@ private:
     sf::ConvexShape darkGrayBridgeRight;
     sf::ConvexShape slopeRight;
 
-    // Pixel-art car
     Car car;
-
-    // Fixed anchor nodes at each end of the bridge
     sf::CircleShape fixedNodeLeft;
     sf::CircleShape fixedNodeRight;
 
@@ -29,6 +26,8 @@ private:
     bool woodDragActive = false;
     float maxWoodLength = 80.0f;
     WoodSegment previewWoodSegment;
+
+    bool drawCar = true; // Whether to draw the car (for Level 2, set to false)
 
     void createGrass();
     void createSlopeLeft();
@@ -40,7 +39,7 @@ private:
     void createFixedNodes();
 
 public:
-    Scene();
+    Scene(bool drawCar = true);
     void startWoodSegment(const sf::Vector2f& start, float maxLengthPixels);
     void updateWoodSegmentPreview(const sf::Vector2f& end);
     // Returns debited cost (0 if not created)

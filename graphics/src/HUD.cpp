@@ -16,7 +16,7 @@ bool loadTextureFromAny(sf::Texture& texture, std::initializer_list<const char*>
 }
 
 HUD::HUD(const sf::Font& font, int level, int score, int budget)
-    : hudLevel(font), hudScore(font), hudBudget(font), playIcon(3)
+    : hudLevel(font), hudScore(font), hudBudget(font), playIcon(3), level1Text(font), level2Text(font)
 {
     const float BTN_SIZE = 44.0f;
     const float BTN_Y = 8.0f;
@@ -73,8 +73,8 @@ HUD::HUD(const sf::Font& font, int level, int score, int budget)
     bool loadedReset = loadTextureFromAny(resetTexture, {
         "assets/icons/refresh-icon.png",
         "graphics/assets/icons/refresh-icon.png",
-        "assets/textures/refresh-icon.png",
-        "graphics/assets/textures/refresh-icon.png"
+        "assets/icons/refresh-icon.png",
+        "graphics/assets/icons/refresh-icon.png"
     });
     if (loadedReset) {
         std::cout << "[OK] Loaded reset icon.\n";
@@ -116,8 +116,8 @@ HUD::HUD(const sf::Font& font, int level, int score, int budget)
     bool loadedWood = loadTextureFromAny(woodTexture, {
         "assets/icons/wood.png",
         "graphics/assets/icons/wood.png",
-        "assets/textures/wood.png",
-        "graphics/assets/textures/wood.png"
+        "assets/icons/wood.png",
+        "graphics/assets/icons/wood.png"
     });
     if (loadedWood) {
         std::cout << "[OK] Loaded wood icon.\n";
@@ -145,6 +145,28 @@ HUD::HUD(const sf::Font& font, int level, int score, int budget)
     menuPanel.setFillColor(sf::Color(40, 40, 40, 230));
     menuPanel.setOutlineColor(sf::Color::White);
     menuPanel.setOutlineThickness(2.0f);
+
+    level1Btn.setSize(sf::Vector2f(280.0f, 50.0f));
+    level1Btn.setPosition(sf::Vector2f(460.0f, 320.0f));
+    level1Btn.setFillColor(sf::Color(38, 166, 154));
+    level1Btn.setOutlineColor(sf::Color(0, 77, 64));
+    level1Btn.setOutlineThickness(2.0f);
+
+    level2Btn.setSize(sf::Vector2f(280.0f, 50.0f));
+    level2Btn.setPosition(sf::Vector2f(460.0f, 390.0f));
+    level2Btn.setFillColor(sf::Color(38, 166, 154));
+    level2Btn.setOutlineColor(sf::Color(0, 77, 64));
+    level2Btn.setOutlineThickness(2.0f);
+
+    level1Text.setCharacterSize(18);
+    level1Text.setFillColor(sf::Color::White);
+    level1Text.setString("Level 1");
+    level1Text.setPosition(sf::Vector2f(545.0f, 335.0f));
+
+    level2Text.setCharacterSize(18);
+    level2Text.setFillColor(sf::Color::White);
+    level2Text.setString("Level 2");
+    level2Text.setPosition(sf::Vector2f(545.0f, 405.0f));
 }
 
 void HUD::update(int score, int budget) {
@@ -172,6 +194,18 @@ std::string HUD::handleClick(sf::Vector2f pos) {
         clearToolSelection();
         menuOpen = !menuOpen;
         return "menu";
+    }
+
+    if (menuOpen && level1Btn.getGlobalBounds().contains(pos)) {
+        menuOpen = false;
+        clearToolSelection();
+        return "level_1";
+    }
+
+    if (menuOpen && level2Btn.getGlobalBounds().contains(pos)) {
+        menuOpen = false;
+        clearToolSelection();
+        return "level_2";
     }
 
     if (menuOpen && menuPanel.getGlobalBounds().contains(pos)) {
@@ -244,6 +278,10 @@ void HUD::draw(sf::RenderWindow& window, bool simRunning) const {
     if (menuOpen) {
         window.draw(menuOverlay);
         window.draw(menuPanel);
+        window.draw(level1Btn);
+        window.draw(level2Btn);
+        window.draw(level1Text);
+        window.draw(level2Text);
     }
 }
 

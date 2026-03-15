@@ -29,7 +29,8 @@ void drawWoodSegment(sf::RenderWindow& window, const sf::Vector2f& start, const 
 }
 }
 
-Scene::Scene() : car(sf::Vector2f(30.0f, 440.0f)) {
+// Scene constructor. If drawCar is false, the car will not be drawn (used for Level 2).
+Scene::Scene(bool drawCar_) : car(sf::Vector2f(30.0f, 440.0f)), drawCar(drawCar_) {
     createGrass();
     createSlopeLeft();
     createDarkGrayBridgeLeft();
@@ -176,10 +177,12 @@ void Scene::draw(sf::RenderWindow& window) {
     window.draw(slopeRight);
     window.draw(darkGrayBridgeRight);
 
-    // Pixel-art car on the left ground
-    car.draw(window);
+    // Draw the car only if enabled (Level 1)
+    if (drawCar) {
+        car.draw(window);
+    }
 
-    constexpr float woodThickness = 8.0f; // Altere aqui para mudar a espessura
+    constexpr float woodThickness = 8.0f; // Wood thickness
     for (const WoodSegment& segment : woodSegments) {
         drawWoodSegment(window, segment.start, segment.end, sf::Color(156, 100, 48), woodThickness);
     }

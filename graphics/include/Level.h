@@ -6,10 +6,15 @@
 class Level {
 public:
     virtual ~Level() = default;
-    virtual void run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning) = 0;
+    virtual void run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning, int& currentLevel) = 0;
 };
 
 class Level1 : public Level {
 public:
-    void run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning) override;
+    void run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning, int& currentLevel) override;
+};
+
+class Level2 : public Level {
+public:
+    void run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning, int& currentLevel) override;
 };

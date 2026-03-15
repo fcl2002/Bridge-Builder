@@ -26,16 +26,33 @@ int main() {
     int budget = 1000;
     int score = 0;
 
-    HUD hud(font, currentLevel, score, budget);
+    while (window.isOpen()) {
+        HUD hud(font, currentLevel, score, budget);
 
-    // Modular: instantiate level 1 only when currentLevel == 1.
-    std::unique_ptr<Level> level;
-    if (currentLevel == 1) {
-        level = std::make_unique<Level1>();
-    }
+        std::unique_ptr<Level> level;
+        if (currentLevel == 1) {
+            level = std::make_unique<Level1>();
+        } else if (currentLevel == 2) {
+            level = std::make_unique<Level2>();
+        }
 
-    if (level) {
-        level->run(window, hud, score, budget, simRunning);
+        if (!level) {
+            std::cout << "[ERROR] Invalid level selected: " << currentLevel << "\n";
+            break;
+        }
+
+        const int previousLevel = currentLevel;
+        level->run(window, hud, score, budget, simRunning, currentLevel);
+
+        if (!window.isOpen()) {
+            break;
+        }
+
+        if (currentLevel != previousLevel) {
+            simRunning = false;
+            score = 0;
+            budget = 1000;
+        }
     }
 
     return 0;
