@@ -1,6 +1,19 @@
 #include "../include/HUD.h"
 #include <SFML/Graphics/Text.hpp>
 
+#include <initializer_list>
+
+namespace {
+bool loadTextureFromAny(sf::Texture& texture, std::initializer_list<const char*> paths) {
+    for (const char* path : paths) {
+        if (texture.loadFromFile(path)) {
+            return true;
+        }
+    }
+    return false;
+}
+}
+
 HUD::HUD(const sf::Font& font, int level, int score, int budget)
     : hudLevel(font), hudScore(font), hudBudget(font), playIcon(3)
 {
@@ -56,7 +69,12 @@ HUD::HUD(const sf::Font& font, int level, int score, int budget)
     resetBg.setOutlineThickness(2.0f);
 
     // Load refresh icon
-    if (resetTexture.loadFromFile("assets/textures/refresh-icon.png")) {
+    if (loadTextureFromAny(resetTexture, {
+        "assets/icons/refresh-icon.png",
+        "graphics/assets/icons/refresh-icon.png",
+        "assets/icons/refresh-icon.png",
+        "graphics/assets/icons/refresh-icon.png"
+    })) {
         resetSprite = std::make_unique<sf::Sprite>(resetTexture);
         // Padding in pixels
         const float padding = 6.0f;
@@ -85,14 +103,19 @@ HUD::HUD(const sf::Font& font, int level, int score, int budget)
     }
 
     // ---- Wood tool ----
-    woodBg.setSize(sf::Vector2f(1.4*BTN_SIZE, 1.4*BTN_SIZE));
-    woodBg.setPosition(sf::Vector2f(1130.0f, 120.0f));
+    woodBg.setSize(sf::Vector2f(BTN_SIZE, BTN_SIZE));
+    woodBg.setPosition(sf::Vector2f(1140.0f, 200.0f));
     woodBg.setFillColor(sf::Color(38, 166, 154)); // #26A69A
     woodBg.setOutlineColor(sf::Color(0, 77, 64)); // #004D40
     woodBg.setOutlineThickness(2.0f);
 
     // Load wood icon
-    if (woodTexture.loadFromFile("assets/textures/wood.png")) {
+    if (loadTextureFromAny(woodTexture, {
+        "assets/icons/wood.png",
+        "graphics/assets/icons/wood.png",
+        "assets/icons/wood.png",
+        "graphics/assets/icons/wood.png"
+    })) {
         woodSprite = std::make_unique<sf::Sprite>(woodTexture);
         // Padding for the icon
         const float padding = 8.0f;
@@ -185,7 +208,8 @@ void HUD::draw(sf::RenderWindow& window, bool simRunning) const {
         window.draw(*resetSprite);
     }
 
-    // Wood tool button: apenas a imagem
+    // Wood tool
+    window.draw(woodBg);
     if (woodSprite) {
         window.draw(*woodSprite);
     }
@@ -193,11 +217,16 @@ void HUD::draw(sf::RenderWindow& window, bool simRunning) const {
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
     sf::Vector2f mousePosF(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
     if (woodBg.getGlobalBounds().contains(mousePosF)) {
-        sf::Text tooltip(hudLevel.getFont(), "Wood", 16);
+        sf::Text tooltip(hudLevel.getFont(), "Wood", 12);
         tooltip.setFillColor(sf::Color::White);
         tooltip.setOutlineColor(sf::Color(0,0,0));
         tooltip.setOutlineThickness(2.0f);
-        tooltip.setPosition(sf::Vector2f(woodBg.getPosition().x, woodBg.getPosition().y + woodBg.getSize().y + 4.0f));
+        const float spacing = 8.0f;
+        const sf::FloatRect bounds = tooltip.getLocalBounds();
+        const sf::Vector2f woodPos = woodBg.getPosition();
+        const float tooltipX = woodPos.x - bounds.size.x - spacing - bounds.position.x;
+        const float tooltipY = woodPos.y + (woodBg.getSize().y - bounds.size.y) / 2.0f - bounds.position.y;
+        tooltip.setPosition(sf::Vector2f(tooltipX, tooltipY));
         window.draw(tooltip);
     }
 
