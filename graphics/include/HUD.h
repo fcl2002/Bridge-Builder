@@ -11,7 +11,7 @@ public:
     void update(int score, int budget);
 
     // Handle a left-click at window position pos
-    // Returns "play", "reset", "menu" or "" depending on what was clicked
+    // Returns "play", "reset", "menu", "wood_on", "wood_off" or ""
     std::string handleClick(sf::Vector2f pos);
 
     void handleKeyEscape();
@@ -19,6 +19,9 @@ public:
     void draw(sf::RenderWindow& window, bool simRunning) const;
 
     bool isMenuOpen() const { return menuOpen; }
+    bool isWoodModeActive() const { return woodModeActive; }
+    bool isPointInHUD(sf::Vector2f pos) const;
+    void clearToolSelection();
 
 private:
     // HUD texts
@@ -34,13 +37,19 @@ private:
 
     // Reset button
     sf::RectangleShape resetBg;
-    sf::CircleShape resetRing;
-    sf::ConvexShape resetArrow1;
-    sf::ConvexShape resetArrow2;
+    sf::Texture resetTexture;
+    std::unique_ptr<sf::Sprite> resetSprite;
 
     // Hamburger button
     sf::RectangleShape hamburgerBg;
     std::array<sf::RectangleShape, 3> hBars;
+
+    // Wood construction button
+    sf::RectangleShape woodBg;
+    sf::Texture woodTexture;
+    std::unique_ptr<sf::Sprite> woodSprite;
+
+    bool woodModeActive = false;
 
     // Menu overlay
     sf::RectangleShape menuOverlay;

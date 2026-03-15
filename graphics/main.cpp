@@ -2,8 +2,15 @@
 #include "include/Scene.h"
 #include "include/HUD.h"
 
+// Cost per wood pixel (can be fractional)
+constexpr float WOOD_COST_PER_PIXEL = 0.5f;
+#include <SFML/Graphics.hpp>
+#include "include/Scene.h"
+#include "include/HUD.h"
+
 int main() {
     sf::RenderWindow window(sf::VideoMode({1200, 800}), "Bridge Builder - Game");
+    constexpr float MAX_WOOD_SEGMENT_LENGTH = 80.0f;
 
     sf::Font font;
     if (!font.openFromFile("assets/Press_Start_2P/PressStart2P-Regular.ttf"))
@@ -11,15 +18,15 @@ int main() {
 
     Scene scene;
 
-    // Game state
-    bool simRunning   = false;
-    int  currentLevel = 1;
-    int  budget       = 1000;
-    int  score        = 0;
+    // Game state variables
+    bool simRunning = false;
+    int currentLevel = 1;
+    int budget = 1000;
+    int score = 0;
 
     HUD hud(font, currentLevel, score, budget);
 
-    // Sky gradient
+    // Sky gradient background
     sf::VertexArray sky(sf::PrimitiveType::TriangleStrip, 4);
     sky[0].position = sf::Vector2f(   0,   0);  sky[1].position = sf::Vector2f(1200,   0);
     sky[2].position = sf::Vector2f(   0, 800);  sky[3].position = sf::Vector2f(1200, 800);
@@ -36,13 +43,38 @@ int main() {
             if (event->is<sf::Event::MouseButtonPressed>()) {
                 auto& me = *event->getIf<sf::Event::MouseButtonPressed>();
                 if (me.button == sf::Mouse::Button::Left) {
-                    std::string action = hud.handleClick(mouseF);
+                    const std::string action = hud.handleClick(mouseF);
                     if (action == "play") {
                         simRunning = !simRunning;
                     } else if (action == "reset") {
                         simRunning = false;
                         score  = 0;
                         budget = 1000;
+                        scene.clearWoodSegments();
+                        hud.update(score, budget);
+                    }
+
+                    // Start wood segment if tool is active and not clicking HUD
+                    const bool hudCapturedClick = !action.empty() || hud.isPointInHUD(mouseF);
+                    if (!hudCapturedClick && hud.isWoodModeActive()) {
+                        scene.startWoodSegment(mouseF, MAX_WOOD_SEGMENT_LENGTH);
+                    }
+                }
+            }
+
+            if (event->is<sf::Event::MouseMoved>()) {
+                if (scene.isBuildingWood()) {
+                    scene.updateWoodSegmentPreview(mouseF);
+                }
+            }
+
+            if (event->is<sf::Event::MouseButtonReleased>()) {
+                auto& me = *event->getIf<sf::Event::MouseButtonReleased>();
+                if (me.button == sf::Mouse::Button::Left && scene.isBuildingWood()) {
+                    scene.updateWoodSegmentPreview(sf::Vector2f(static_cast<float>(me.position.x), static_cast<float>(me.position.y)));
+                    int cost = scene.commitWoodSegment(budget, WOOD_COST_PER_PIXEL);
+                    // Update HUD if segment was created and budget changed
+                    if (cost > 0) {
                         hud.update(score, budget);
                     }
                 }

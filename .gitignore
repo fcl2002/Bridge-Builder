@@ -6,7 +6,8 @@ import_sprint4.ps1
 # Graphics
 *.bat
 *.dll
+*.exe
 graphics/SETUP_COMPLETE.md
 kenney_platformer-pack-redux/
 graphics/assets/Press_Start_2P/OFL.txt
-graphics/main.exe
+

@@ -1,5 +1,34 @@
 #include "../include/Scene.h"
 
+#include <cmath>
+
+namespace {
+sf::Vector2f clampSegmentEnd(const sf::Vector2f& start, const sf::Vector2f& end, float maxLength) {
+    const sf::Vector2f delta = end - start;
+    const float distance = std::sqrt(delta.x * delta.x + delta.y * delta.y);
+
+    if (distance <= maxLength || distance <= 0.0001f) {
+        return end;
+    }
+
+    const float scale = maxLength / distance;
+    return start + delta * scale;
+}
+
+void drawWoodSegment(sf::RenderWindow& window, const sf::Vector2f& start, const sf::Vector2f& end, const sf::Color& color, float thickness = 5.0f) {
+    sf::Vector2f delta = end - start;
+    float length = std::sqrt(delta.x * delta.x + delta.y * delta.y);
+    if (length < 1.0f) return;
+    float angle = std::atan2(delta.y, delta.x) * 180.0f / 3.14159265f;
+    sf::RectangleShape rect(sf::Vector2f(length, thickness));
+    rect.setOrigin(sf::Vector2f(0.f, thickness / 2.0f));
+    rect.setPosition(start);
+    rect.setRotation(sf::degrees(angle));
+    rect.setFillColor(color);
+    window.draw(rect);
+}
+}
+
 Scene::Scene() : car(sf::Vector2f(30.0f, 440.0f)) {
     createGrass();
     createSlopeLeft();
@@ -96,6 +125,49 @@ void Scene::createFixedNodes() {
     fixedNodeRight.setFillColor(sf::Color(210, 30, 30));
 }
 
+void Scene::startWoodSegment(const sf::Vector2f& start, float maxLengthPixels) {
+    maxWoodLength = maxLengthPixels;
+    woodDragActive = true;
+    previewWoodSegment.start = start;
+    previewWoodSegment.end = start;
+}
+
+void Scene::updateWoodSegmentPreview(const sf::Vector2f& end) {
+    if (!woodDragActive) {
+        return;
+    }
+
+    previewWoodSegment.end = clampSegmentEnd(previewWoodSegment.start, end, maxWoodLength);
+}
+
+int Scene::commitWoodSegment(int& budget, float woodCostPerPixel) {
+    if (!woodDragActive) {
+        return 0;
+    }
+
+    const sf::Vector2f delta = previewWoodSegment.end - previewWoodSegment.start;
+    const float length = std::sqrt(delta.x * delta.x + delta.y * delta.y);
+    int cost = static_cast<int>(std::round(length * woodCostPerPixel));
+    if (length > 1.0f && budget >= cost) {
+        woodSegments.push_back(previewWoodSegment);
+        budget -= cost;
+        woodDragActive = false;
+        return cost;
+    }
+    // Do not create segment if not enough budget
+    woodDragActive = false;
+    return 0;
+}
+
+void Scene::cancelWoodSegmentPreview() {
+    woodDragActive = false;
+}
+
+void Scene::clearWoodSegments() {
+    woodSegments.clear();
+    woodDragActive = false;
+}
+
 void Scene::draw(sf::RenderWindow& window) {
     window.draw(grass);
     window.draw(slopeLeft);
@@ -106,6 +178,14 @@ void Scene::draw(sf::RenderWindow& window) {
 
     // Pixel-art car on the left ground
     car.draw(window);
+
+    constexpr float woodThickness = 8.0f; // Altere aqui para mudar a espessura
+    for (const WoodSegment& segment : woodSegments) {
+        drawWoodSegment(window, segment.start, segment.end, sf::Color(156, 100, 48), woodThickness);
+    }
+    if (woodDragActive) {
+        drawWoodSegment(window, previewWoodSegment.start, previewWoodSegment.end, sf::Color(200, 140, 90), woodThickness);
+    }
 
     // Fixed anchor nodes at bridge endpoints
     window.draw(fixedNodeLeft);
