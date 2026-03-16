@@ -55,10 +55,3 @@ void Vehicle::applyWeightToNodes(){
     currElem->nodeB->applyForce(forceDown * t);
 }
 
-bool Vehicle::hasFinished(const std::vector<WoodBeam*>& roadElements) const{
-    float totalLength = 0.0f;
-    for(WoodBeam* beam: roadElements){
-        totalLength += beam->restLength;
-    }
-    return currPos >= totalLength;
-}

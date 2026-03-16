@@ -45,11 +45,6 @@ class Vehicle{
          */
         void applyWeightToNodes();
 
-        /**
-         * @brief Checks if the vehicle has finished crossing the bridge
-         */
-        bool hasFinished(const std::vector<WoodBeam*>& roadElements) const;
-
         WoodBeam* getCurrentElement() const{
             return currElem;
         }

@@ -92,19 +92,4 @@ TEST_CASE("Vehicle - applyWeightToNodes sets fallen when no valid element is sel
     CHECK(vehicle.hasFallen == true);
 }
 
-TEST_CASE("Vehicle - hasFinished depends on summed road lengths") {
-    Node n0(Vec2(0.0f, 0.0f));
-    Node n1(Vec2(10.0f, 0.0f));
-    Node n2(Vec2(20.0f, 0.0f));
 
-    WoodBeam road1(&n0, &n1, 10.0f, 1.0f, 1.0f, true, 1.0f);
-    WoodBeam road2(&n1, &n2, 10.0f, 1.0f, 1.0f, true, 1.0f);
-    std::vector<WoodBeam*> roads = {&road1, &road2};
-
-    Vehicle vehicle(100.0f, 0.0f);
-    vehicle.currPos = 19.9f;
-    CHECK(vehicle.hasFinished(roads) == false);
-
-    vehicle.currPos = 20.0f;
-    CHECK(vehicle.hasFinished(roads) == true);
-}
