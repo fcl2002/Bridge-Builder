@@ -8,7 +8,6 @@
 *
 * Represents R² euclidean space elements, used for position,
 * velocity, acceleration and forces in the simulation.
-*
 */
 
 struct Vec2{
