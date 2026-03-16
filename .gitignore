@@ -4,3 +4,5 @@ import_sprint3.ps1
 import_sprint4.ps1
 
 *.dia~
+
+*.exe
