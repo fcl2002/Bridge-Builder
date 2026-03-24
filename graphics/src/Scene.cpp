@@ -1,5 +1,7 @@
 #include "../include/Scene.h"
+#include "../../classes/WoodBeam.h"
 
+#include <algorithm>
 #include <cmath>
 
 namespace {
@@ -37,6 +39,76 @@ Scene::Scene() : car(sf::Vector2f(30.0f, 440.0f)) {
     createDarkGrayBridgeRight();
     createSlopeRight();
     createFixedNodes();
+}
+
+Node* Scene::findNode(const sf::Vector2f& pos, float threshold) {
+    for (const auto& node : bridge.nodes) { 
+        float dx = node->position.x - pos.x;
+        float dy = node->position.y - pos.y;
+        if (std::sqrt(dx*dx + dy*dy) <= threshold) {
+            return node.get(); 
+        }
+    }
+    return nullptr; 
+}
+
+std::vector<WoodBeam*> Scene::getRoadBeams() const {
+    std::vector<WoodBeam*> roads;
+    for (const auto& elem : bridge.elements) {
+        if (auto* beam = dynamic_cast<WoodBeam*>(elem.get())) {
+            if (beam->isRoad) {
+                roads.push_back(beam);
+            }
+        }
+    }
+
+    std::sort(roads.begin(), roads.end(), [](const WoodBeam* a, const WoodBeam* b) {
+        float ax = std::min(a->nodeA->position.x, a->nodeB->position.x);
+        float bx = std::min(b->nodeA->position.x, b->nodeB->position.x);
+        return ax < bx;
+    });
+    return roads;
+}
+
+void Scene::setCarPosition(const sf::Vector2f& target) {
+    sf::Vector2f delta = target - carBasePos;
+    car.move(delta);
+    carBasePos = target;
+}
+
+void Scene::resetSimulation() {
+    vehicle.currPos = 0.0f;
+    vehicle.hasFallen = false;
+
+    // Start the car at the beginning of the road, if available
+    auto roads = getRoadBeams();
+    if (!roads.empty()) {
+        WoodBeam* first = roads.front();
+        Vec2 startPos = first->nodeA->position;
+        if (first->nodeB->position.x < startPos.x) {
+            startPos = first->nodeB->position;
+        }
+        setCarPosition(sf::Vector2f(startPos.x, startPos.y));
+    } else {
+        // Default position
+        setCarPosition(sf::Vector2f(30.0f, 440.0f));
+    }
+}
+
+void Scene::simulateStep() {
+    // Update vehicle position along the road segments
+    auto roads = getRoadBeams();
+    vehicle.update(roads);
+
+    // Apply simulation forces (bridge + vehicle)
+    std::vector<Vehicle*> vehicles = { &vehicle };
+    bridge.step(vehicles);
+
+    // Update car visual position if still on the bridge, otherwise stop
+    if (!vehicle.hasFallen) {
+        Vec2 pos = vehicle.getPosition();
+        setCarPosition(sf::Vector2f(pos.x, pos.y));
+    }
 }
 
 void Scene::createGrass() {
@@ -125,11 +197,21 @@ void Scene::createFixedNodes() {
     fixedNodeRight.setFillColor(sf::Color(210, 30, 30));
 }
 
-void Scene::startWoodSegment(const sf::Vector2f& start, float maxLengthPixels) {
+bool Scene::startWoodSegment(const sf::Vector2f& mousePos, float maxLengthPixels) {
+    Node* startNode = findNode(mousePos);
+    
+    if (!startNode) {
+        return false; 
+    }
+
+    currentStartNode = startNode;
     maxWoodLength = maxLengthPixels;
     woodDragActive = true;
-    previewWoodSegment.start = start;
-    previewWoodSegment.end = start;
+    
+    previewWoodSegment.start = sf::Vector2f(startNode->position.x, startNode->position.y);
+    previewWoodSegment.end = previewWoodSegment.start;
+    
+    return true;
 }
 
 void Scene::updateWoodSegmentPreview(const sf::Vector2f& end) {
