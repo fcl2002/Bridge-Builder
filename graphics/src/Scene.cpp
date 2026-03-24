@@ -342,11 +342,21 @@ void Scene::draw(sf::RenderWindow& window, bool simRunning) {
 
         drawWoodSegment(window, start, end, beamColor, woodThickness);
     }
-    if (woodDragActive) {
+
+    if (woodDragActive && !simRunning) {
         drawWoodSegment(window, previewWoodSegment.start, previewWoodSegment.end, sf::Color(200, 140, 90), woodThickness);
     }
 
-    // Fixed anchor nodes at bridge endpoints
+    // Draw nodes after beams 
+    sf::CircleShape joint(8.0f);  
+    joint.setOrigin(sf::Vector2f(8.0f, 8.0f));
+    joint.setFillColor(sf::Color(150, 50, 50)); // red
+
+    for (const auto& node : bridge.nodes) {
+        joint.setPosition(sf::Vector2f(node->position.x, node->position.y));
+        window.draw(joint);
+    }
+
     window.draw(fixedNodeLeft);
     window.draw(fixedNodeRight);
 }
