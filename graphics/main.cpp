@@ -21,7 +21,7 @@ int main() {
     // Game state variables
     bool simRunning = false;
     int currentLevel = 1;
-    int budget = 1000;
+    int budget = 1600;
     int score = 0;
 
     HUD hud(font, currentLevel, score, budget);
@@ -46,10 +46,13 @@ int main() {
                     const std::string action = hud.handleClick(mouseF);
                     if (action == "play") {
                         simRunning = !simRunning;
+                        if (simRunning) {
+                            scene.resetSimulation();
+                        }
                     } else if (action == "reset") {
                         simRunning = false;
                         score  = 0;
-                        budget = 1000;
+                        budget = 1600;
                         scene.clearWoodSegments();
                         hud.update(score, budget);
                     }
@@ -61,6 +64,7 @@ int main() {
                     }
                 }
             }
+            
 
             if (event->is<sf::Event::MouseMoved>()) {
                 if (scene.isBuildingWood()) {
@@ -85,11 +89,16 @@ int main() {
                 if (code == sf::Keyboard::Key::Escape)
                     hud.handleKeyEscape();
             }
+
+        }
+
+        if (simRunning) {
+            scene.simulateStep();
         }
 
         window.clear();
         window.draw(sky);
-        scene.draw(window);
+        scene.draw(window, simRunning);
         hud.draw(window, simRunning);
         window.display();
     }
