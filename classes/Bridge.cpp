@@ -52,7 +52,7 @@ void Bridge::clearForces(){
 void Bridge::applyGravity(){
     for(auto& node: nodes){
         if(node->isFix) continue;
-        Vec2 gravity(0.0f, -Physics::GRAVITY * node->mass);
+        Vec2 gravity(0.0f, Physics::GRAVITY * node->mass);
         node->applyForce(gravity);
     }
 }

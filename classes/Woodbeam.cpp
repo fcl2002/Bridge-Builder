@@ -14,7 +14,7 @@ WoodBeam::WoodBeam(Node* nodeA,
     Element(nodeA, nodeB, restLength),
     maxTensileStress(maxTensileStress),
     maxCompressiveStress(maxCompressiveStress),
-    stiffness(ELASTIC_MODULUS * SECTION_AREA / restLength),
+    stiffness(ELASTIC_MODULUS * SECTION_AREA / restLength * 0.001f),  // Reduced 1000x
     colorFactor(0.5f),
     isRoad(isRoad),
     cost(cost)
