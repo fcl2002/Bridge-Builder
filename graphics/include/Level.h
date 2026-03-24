@@ -18,3 +18,8 @@ class Level2 : public Level {
 public:
     void run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning, int& currentLevel) override;
 };
+
+class Level3 : public Level {
+public:
+    void run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning, int& currentLevel) override;
+};

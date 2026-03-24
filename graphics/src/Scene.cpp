@@ -62,8 +62,6 @@ void Scene::createDarkGrayBridgeLeft() {
     darkGrayBridgeLeft.setPointCount(5);
     darkGrayBridgeLeft.setPoint(0, sf::Vector2f(150, 440));
     darkGrayBridgeLeft.setPoint(1, sf::Vector2f(343, 440));
-    // darkGrayBridgeLeft.setPoint(2, sf::Vector2f(343, 460));
-    // darkGrayBridgeLeft.setPoint(3, sf::Vector2f(343, 460));
     darkGrayBridgeLeft.setPoint(2, sf::Vector2f(343, 590));
     darkGrayBridgeLeft.setPoint(3, sf::Vector2f(330, 600));
     darkGrayBridgeLeft.setPoint(4, sf::Vector2f(270, 600));
@@ -107,7 +105,7 @@ void Scene::createSlopeRight() {
     slopeRight.setPoint(4, sf::Vector2f(1056, 608));
     slopeRight.setPoint(5, sf::Vector2f(1080, 612));
     slopeRight.setPoint(6, sf::Vector2f(1280, 615));
-    slopeRight.setFillColor(sf::Color(122, 122, 122));
+    slopeRight.setFillColor(sf::Color(122, 122, 122)); //#rgb(122, 122, 122)
 }
 
 void Scene::createFixedNodes() {
@@ -117,7 +115,7 @@ void Scene::createFixedNodes() {
     fixedNodeLeft.setRadius(radius);
     fixedNodeLeft.setOrigin(sf::Vector2f(radius, radius));
     fixedNodeLeft.setPosition(sf::Vector2f(343.0f, 440.0f));
-    fixedNodeLeft.setFillColor(sf::Color(210, 30, 30));
+    fixedNodeLeft.setFillColor(sf::Color(210, 30, 30)); // rgb(210, 30, 30)
 
     // Fixed anchor node at the right end of the bridge deck (x=977, y=440)
     fixedNodeRight.setRadius(radius);

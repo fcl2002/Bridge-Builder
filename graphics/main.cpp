@@ -1,8 +1,8 @@
 
-#include <SFML/Graphics.hpp>
+#include <iostream>
 #include "include/HUD.h"
 #include "include/Level.h"
-#include <iostream>
+#include <SFML/Graphics.hpp>
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({1200, 800}), "Bridge Builder - Game");
@@ -34,6 +34,8 @@ int main() {
             level = std::make_unique<Level1>();
         } else if (currentLevel == 2) {
             level = std::make_unique<Level2>();
+        } else if (currentLevel == 3) {
+            level = std::make_unique<Level3>();
         }
 
         if (!level) {
