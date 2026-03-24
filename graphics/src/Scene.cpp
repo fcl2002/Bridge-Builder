@@ -195,6 +195,10 @@ void Scene::createFixedNodes() {
     fixedNodeRight.setOrigin(sf::Vector2f(radius, radius));
     fixedNodeRight.setPosition(sf::Vector2f(937.0f, 440.0f));
     fixedNodeRight.setFillColor(sf::Color(210, 30, 30));
+
+    // Add corresponding fixed nodes to the physics bridge model
+    bridge.addNode(Vec2(343.0f, 440.0f), 1.0f, true);
+    bridge.addNode(Vec2(937.0f, 440.0f), 1.0f, true);
 }
 
 bool Scene::startWoodSegment(const sf::Vector2f& mousePos, float maxLengthPixels) {
@@ -223,21 +227,44 @@ void Scene::updateWoodSegmentPreview(const sf::Vector2f& end) {
 }
 
 int Scene::commitWoodSegment(int& budget, float woodCostPerPixel) {
-    if (!woodDragActive) {
-        return 0;
-    }
+    if (!woodDragActive || !currentStartNode) return 0;
 
     const sf::Vector2f delta = previewWoodSegment.end - previewWoodSegment.start;
     const float length = std::sqrt(delta.x * delta.x + delta.y * delta.y);
     int cost = static_cast<int>(std::round(length * woodCostPerPixel));
+    
+    woodDragActive = false; 
+    
     if (length > 1.0f && budget >= cost) {
-        woodSegments.push_back(previewWoodSegment);
+
+        Node* endNode = findNode(previewWoodSegment.end);
+
+        if (!endNode) {
+            endNode = bridge.addNode(Vec2(previewWoodSegment.end.x, previewWoodSegment.end.y), 1.0f, false);
+        }
+
+        if (currentStartNode != endNode) {
+            // Detect if beam is part of the road (its horizontal and at bridge height) 
+            // Tolerance: ±15° of horizontal AND height between 430-450 pixels (main bridge)
+            const sf::Vector2f delta(endNode->position.x - currentStartNode->position.x, 
+                                      endNode->position.y - currentStartNode->position.y);
+            const float angle = std::atan2(delta.y, delta.x);
+            const float angleTol = 15.0f * 3.14159265f / 180.0f; // 15° tolerance
+            bool isHorizontal = (std::abs(angle) < angleTol) || (std::abs(angle) > (3.14159265f - angleTol));
+            
+            // Verify if both nodes are at the bridge height (y ~440)
+            float avgY = (endNode->position.y + currentStartNode->position.y) / 2.0f;
+            bool isAtBridgeHeight = (avgY > 425.0f && avgY < 465.0f);
+            
+            bool isRoad = isHorizontal && isAtBridgeHeight;
+
+            bridge.addWoodBeam(currentStartNode, endNode, 0.05f, 0.10f, isRoad);
         budget -= cost;
         woodDragActive = false;
         return cost;
+        }
     }
-    // Do not create segment if not enough budget
-    woodDragActive = false;
+
     return 0;
 }
 
