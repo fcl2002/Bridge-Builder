@@ -273,11 +273,26 @@ void Scene::cancelWoodSegmentPreview() {
 }
 
 void Scene::clearWoodSegments() {
+    // Clear all elements and nodes from the bridge
+    bridge.elements.clear();
+    bridge.nodes.clear();
+    bridge.hasCollapsed = false;
+    bridge.totalCost = 0.0f;
+
     woodSegments.clear();
     woodDragActive = false;
+    currentStartNode = nullptr;
+
+    // Reset vehicle and car to initial state
+    vehicle.currPos = 0.0f;
+    vehicle.hasFallen = false;
+    setCarPosition(sf::Vector2f(30.0f, 440.0f));
+
+    // Recreate the fixed anchor nodes
+    createFixedNodes();
 }
 
-void Scene::draw(sf::RenderWindow& window) {
+void Scene::draw(sf::RenderWindow& window, bool simRunning) {
     window.draw(grass);
     window.draw(slopeLeft);
     window.draw(river);
