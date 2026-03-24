@@ -2,9 +2,16 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "Car.h"
+#include "../../classes/Bridge.h"
+#include "../../classes/Vehicle.h"
 
 class Scene {
 private:
+
+    Bridge bridge;
+    Node* currentStartNode = nullptr;
+
+
     struct WoodSegment {
         sf::Vector2f start;
         sf::Vector2f end;
@@ -18,8 +25,13 @@ private:
     sf::ConvexShape darkGrayBridgeRight;
     sf::ConvexShape slopeRight;
 
-    // Pixel-art car
+    // Pixel-art car (rendered on the bridge)
     Car car;
+    // Keeps track of the current car base position (bottom-left of sprite)
+    sf::Vector2f carBasePos;
+
+    // Vehicle used to apply dynamic load on the bridge (moves along road beams)
+    Vehicle vehicle;
 
     // Fixed anchor nodes at each end of the bridge
     sf::CircleShape fixedNodeLeft;
@@ -39,14 +51,31 @@ private:
     void createSlopeRight();
     void createFixedNodes();
 
+    // Helpers for simulating the vehicle and its position along the road
+    std::vector<WoodBeam*> getRoadBeams() const;
+    void setCarPosition(const sf::Vector2f& target);
+
 public:
     Scene();
-    void startWoodSegment(const sf::Vector2f& start, float maxLengthPixels);
+    bool startWoodSegment(const sf::Vector2f& start, float maxLengthPixels);
     void updateWoodSegmentPreview(const sf::Vector2f& end);
     // Returns debited cost (0 if not created)
+    Bridge& getBridge() {
+        return bridge;
+    }
+    Car& getCar() {
+        return car;
+    }
+    Node* findNode(const sf::Vector2f& pos, float threshold = 25.0f);
+    
     int commitWoodSegment(int& budget, float woodCostPerPixel = 0.5f);
     void cancelWoodSegmentPreview();
     bool isBuildingWood() const { return woodDragActive; }
     void clearWoodSegments();
-    void draw(sf::RenderWindow& window);
+
+    // Simulation helpers
+    void resetSimulation();
+    void simulateStep();
+
+    void draw(sf::RenderWindow& window, bool simRunning = false);
 };
