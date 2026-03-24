@@ -7,7 +7,10 @@ public:
     // pos: bottom-left anchor position of the car on screen
     explicit Car(sf::Vector2f pos);
 
-    // Move the car horizontally by dx pixels
+    // Move the car by a delta vector (dx, dy) in pixels (added in cm)
+    void move(const sf::Vector2f& delta);
+
+    // Convenience helper for horizontal-only movement (legacy)
     void move(float dx);
 
     void draw(sf::RenderWindow& window) const;

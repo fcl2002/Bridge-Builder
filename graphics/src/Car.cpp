@@ -79,9 +79,13 @@ void Car::addBlock(sf::Vector2f base, int col, int row, int w, int h, sf::Color 
     blocks.push_back(rect);
 }
 
-void Car::move(float dx) {
+void Car::move(const sf::Vector2f& delta) {
     for (auto& b : blocks)
-        b.move(sf::Vector2f(dx, 0.0f));
+        b.move(delta);
+}
+
+void Car::move(float dx) {
+    move(sf::Vector2f(dx, 0.0f));
 }
 
 void Car::draw(sf::RenderWindow& window) const {
