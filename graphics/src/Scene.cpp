@@ -303,9 +303,44 @@ void Scene::draw(sf::RenderWindow& window, bool simRunning) {
     // Pixel-art car on the left ground
     car.draw(window);
 
-    constexpr float woodThickness = 8.0f; // Altere aqui para mudar a espessura
-    for (const WoodSegment& segment : woodSegments) {
-        drawWoodSegment(window, segment.start, segment.end, sf::Color(156, 100, 48), woodThickness);
+    constexpr float woodThickness = 7.0f; // Thickness of the beams
+    for (const auto& element : bridge.elements) {
+
+        sf::Vector2f start(element->nodeA->position.x, element->nodeA->position.y);
+        sf::Vector2f end(element->nodeB->position.x, element->nodeB->position.y);
+
+        // Differenciate color by type of beam (road vs structure) and break state
+        WoodBeam* beam = dynamic_cast<WoodBeam*>(element.get());
+        sf::Color beamColor = sf::Color(156, 100, 48);  // Marrom (estrutura padrão)
+
+        if (beam) {
+            // Verify if the beam is broken
+            if (beam->isBroken) {
+                beamColor = sf::Color(200, 50, 50);  // Red for broken
+            } else if (beam->isRoad) {
+                // Road: green tone to facilitate identification
+                beamColor = sf::Color(180, 180, 180);
+
+                // Adjust color based on stress for quick visualization
+                //  1 = tension (red)
+                float factor = beam->colorFactor;
+                auto mix = [&](float a, float b) {
+                    return static_cast<unsigned char>(std::round(a + (b - a) * factor));
+                };
+                sf::Color tensionColor(
+                    mix(0.0f, 255.0f),
+                    mix(255.0f, 100.0f),
+                    mix(0.0f, 100.0f)
+                );
+                beamColor = sf::Color(
+                    std::min(255, (beamColor.r + tensionColor.r) / 2),
+                    std::min(255, (beamColor.g + tensionColor.g) / 2),
+                    std::min(255, (beamColor.b + tensionColor.b) / 2)
+                );
+            }
+        }
+
+        drawWoodSegment(window, start, end, beamColor, woodThickness);
     }
     if (woodDragActive) {
         drawWoodSegment(window, previewWoodSegment.start, previewWoodSegment.end, sf::Color(200, 140, 90), woodThickness);
