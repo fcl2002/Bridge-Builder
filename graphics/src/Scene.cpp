@@ -31,7 +31,10 @@ void drawWoodSegment(sf::RenderWindow& window, const sf::Vector2f& start, const 
 }
 }
 
-Scene::Scene() : car(sf::Vector2f(30.0f, 440.0f)) {
+Scene::Scene() : car(sf::Vector2f(30.0f, 440.0f)),
+    carBasePos(30.0f, 440.0f),
+    vehicle(3120.0f, 2.0f) // weight in N (heavy), speed in px/s (slow)
+{
     createGrass();
     createSlopeLeft();
     createDarkGrayBridgeLeft();
@@ -259,9 +262,8 @@ int Scene::commitWoodSegment(int& budget, float woodCostPerPixel) {
             bool isRoad = isHorizontal && isAtBridgeHeight;
 
             bridge.addWoodBeam(currentStartNode, endNode, 0.05f, 0.10f, isRoad);
-        budget -= cost;
-        woodDragActive = false;
-        return cost;
+            budget -= cost;
+            return cost;
         }
     }
 
