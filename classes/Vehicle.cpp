@@ -1,6 +1,7 @@
 //Vehicle.cpp
 #include "Vehicle.h"
 #include "Node.h"
+#include <algorithm>
 
 Vehicle::Vehicle(float weight, float speed):
     weight(weight),
@@ -53,5 +54,18 @@ void Vehicle::applyWeightToNodes(){
     Vec2 forceDown(0.0f, -weight);
     currElem->nodeA->applyForce(forceDown * (1.0f - t));
     currElem->nodeB->applyForce(forceDown * t);
+}
+
+// added cm
+Vec2 Vehicle::getPosition() const {
+    if(!currElem) return Vec2(0.0f, 0.0f);
+
+    float t = (currPos - _localOffset) / currElem->restLength;
+    t = std::max(0.0f, std::min(1.0f, t));
+
+    return Vec2(
+        currElem->nodeA->position.x * (1.0f - t) + currElem->nodeB->position.x * t,
+        currElem->nodeA->position.y * (1.0f - t) + currElem->nodeB->position.y * t
+    );
 }
 

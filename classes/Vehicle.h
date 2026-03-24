@@ -48,4 +48,9 @@ class Vehicle{
         WoodBeam* getCurrentElement() const{
             return currElem;
         }
+        /**
+         * @brief Returns the world position of the vehicle along the current road element.
+         * If the vehicle is not on a road element yet, returns (0, 0).
+         */
+        Vec2 getPosition() const;
 };
