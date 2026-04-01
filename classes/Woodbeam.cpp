@@ -1,5 +1,6 @@
 //WoodBeam.cpp
 #include "WoodBeam.h"
+#include "Physics.h"
 #include "Node.h"
 #include <cmath>
 #include <algorithm>
@@ -14,7 +15,7 @@ WoodBeam::WoodBeam(Node* nodeA,
     Element(nodeA, nodeB, restLength),
     maxTensileStress(maxTensileStress),
     maxCompressiveStress(maxCompressiveStress),
-    stiffness(ELASTIC_MODULUS * SECTION_AREA / restLength * 0.001f),  // Reduced 1000x
+    stiffness(ELASTIC_MODULUS * SECTION_AREA / restLength * 0.0004f),  
     colorFactor(0.5f),
     isRoad(isRoad),
     cost(cost)

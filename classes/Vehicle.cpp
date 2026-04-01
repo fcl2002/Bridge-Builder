@@ -51,7 +51,7 @@ void Vehicle::applyWeightToNodes(){
     t = std::max(0.0f, std::min(1.0f, t)); // Clamp t to [0, 1]
 
     //Load distribution
-    Vec2 forceDown(0.0f, -weight);
+    Vec2 forceDown(0.0f, weight);
     currElem->nodeA->applyForce(forceDown * (1.0f - t));
     currElem->nodeB->applyForce(forceDown * t);
 }

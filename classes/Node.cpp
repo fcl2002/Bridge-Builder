@@ -23,11 +23,11 @@ void Node::update(){
     //2. v += a * dt (Symplectic Euler velocity update)
     velocity += acceleration * Physics::DT;
 
-    //3. p += v * dt (Symplectic Euler position update)
-    position += velocity * Physics::DT;
-
-    //4. v *= DAMPING (Apply damping to simulate energy loss)
+    //3. v *= DAMPING (Apply damping to simulate energy loss before updating position)
     velocity *= Physics::DAMPING;
+
+    //4. p += v * dt (Symplectic Euler position update)
+    position += velocity * Physics::DT;
 
     //5. Clear force accumulator for the next frame
     clearForces();
