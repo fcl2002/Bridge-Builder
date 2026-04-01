@@ -32,15 +32,33 @@ WoodBeam* Bridge::addWoodBeam(Node* nodeA, Node* nodeB,
     return ptr;
 }
 
-void Bridge::step(const std::vector<Vehicle*>& vehicles){
+void Bridge::step(const std::vector<Vehicle*>& vehicles, const std::vector<WoodBeam*>& roadElements){
     if(hasCollapsed) return;
 
     clearForces();
     applyGravity();
     applyElementForces();
-    applyVehicleForces(vehicles);
+    applyVehicleForces(vehicles, roadElements);
     updateNodes();
     checkCollapse();
+}
+
+void Bridge::step(const std::vector<Vehicle*>& vehicles){
+    std::vector<WoodBeam*> roads;
+    for(auto& elem : elements){
+        if(auto* beam = dynamic_cast<WoodBeam*>(elem.get())){
+            if(beam->isRoad){
+                roads.push_back(beam);
+            }
+        }
+    }
+    step(vehicles, roads);
+}
+
+void Bridge::applyVehicleForces(const std::vector<Vehicle*>& vehicles, const std::vector<WoodBeam*>& roadElements){
+    for(auto* vehicle: vehicles){
+        vehicle->applyWeightToNodes(roadElements);
+    }
 }
 
 void Bridge::clearForces(){

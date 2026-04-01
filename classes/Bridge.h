@@ -52,7 +52,7 @@ class Bridge{
      * 4. update() - Each node integrates its position and velocity
      * 5. checkCollapse() - Check global collapse
      */
-    void step(const std::vector<Vehicle*>& vehicles);
+    void step(const std::vector<Vehicle*>& vehicles, const std::vector<WoodBeam*>& roadElements = {});
 
     private:
         void clearForces();
@@ -60,5 +60,5 @@ class Bridge{
         void applyElementForces();
         void updateNodes();
         void checkCollapse();
-        void applyVehicleForces(const std::vector<Vehicle*>& vehicles);
+        void applyVehicleForces(const std::vector<Vehicle*>& vehicles, const std::vector<WoodBeam*>& roadElements);
 };
