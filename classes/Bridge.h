@@ -39,8 +39,8 @@ class Bridge{
      * @return Pointer to the newly created wood beam element
      */
     WoodBeam* addWoodBeam(Node* nodeA, Node* nodeB,
-                       float maxTensileStress = 0.05f,
-                       float maxCompressiveStress = 0.10f,
+                       float maxTensileStress = 0.04f,
+                       float maxCompressiveStress = 0.08f,
                        bool isRoad = false,
                        float cost = 1.0f);
 

@@ -261,7 +261,12 @@ int Scene::commitWoodSegment(int& budget, float woodCostPerPixel) {
             
             bool isRoad = isHorizontal && isAtBridgeHeight;
 
-            bridge.addWoodBeam(currentStartNode, endNode, 0.05f, 0.10f, isRoad);
+            // stronger structural beams so truss builds improve robustness;
+            // road beams remain more flexível para simular pavimentação.
+            float maxTensile = isRoad ? 0.12f : 0.40f;
+            float maxCompressive = isRoad ? 0.20f : 0.45f;
+
+            bridge.addWoodBeam(currentStartNode, endNode, maxTensile, maxCompressive, isRoad);
             budget -= cost;
             return cost;
         }
