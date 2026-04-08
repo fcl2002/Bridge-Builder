@@ -17,6 +17,7 @@ void Level3::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
 
     sf::Texture truckTexture;
     std::unique_ptr<sf::Sprite> truckSprite;
+    Car carVehicle(sf::Vector2f(200.0f, 440.0f));
     bool truckLoaded = false;
     if (truckTexture.loadFromFile("assets/icons/truck.png")) {
         std::cout << "[OK] Loaded truck sprite: assets/icons/truck.png\n";
@@ -144,6 +145,8 @@ void Level3::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
         if (truckSprite) {
             window.draw(*truckSprite);
         }
+
+        carVehicle.draw(window);
 
         // Anchor node below the left bridge
         sf::CircleShape redDot(4.0f); // radius 4
