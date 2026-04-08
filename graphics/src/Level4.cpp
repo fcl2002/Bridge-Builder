@@ -1,8 +1,9 @@
 #include "../include/Level.h"
 
-void Level1::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning, int& currentLevel) {
+void Level4::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning, int& currentLevel) {
     constexpr float MAX_WOOD_SEGMENT_LENGTH = 80.0f;
-    Scene scene;
+    // Do not draw the car in Level 2
+    Scene scene(false);
 
     sf::VertexArray sky(sf::PrimitiveType::TriangleStrip, 4);
     sky[0].position = sf::Vector2f(0, 0);
@@ -11,6 +12,9 @@ void Level1::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
     sky[3].position = sf::Vector2f(1200, 800);
     sky[0].color = sky[1].color = sf::Color(80, 193, 198);
     sky[2].color = sky[3].color = sf::Color(200, 235, 240);
+
+    Car leftCar(sf::Vector2f(40.0f, 440.0f));
+    Car rightCar(sf::Vector2f(180.0f, 440.0f));
 
     while (window.isOpen()) {
         sf::Vector2f mouseF(sf::Mouse::getPosition(window));
@@ -83,7 +87,59 @@ void Level1::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
 
         window.clear();
         window.draw(sky);
-        scene.draw(window);
+        scene.draw(window); // bridge, terrain and river
+
+        // Visual pillars in the middle of the river (support towers for the bridge)
+        const float riverTopY = 500.0f;          // approximate water/top-of-river line
+        const float pillarWidth = 60.0f;
+        const float pillarHeight = 110.0f;
+
+        sf::RectangleShape leftPillar(sf::Vector2f(pillarWidth, pillarHeight));
+        leftPillar.setFillColor(sf::Color(85, 85, 85));
+        leftPillar.setOutlineColor(sf::Color(110, 110, 115));
+        leftPillar.setPosition(sf::Vector2f(510.0f, riverTopY));
+
+        sf::RectangleShape leftBase(sf::Vector2f(pillarWidth+10, 18.0f));
+        leftBase.setFillColor(sf::Color(85, 85, 85)); // rgb(85, 85, 85)
+        leftBase.setOutlineColor(sf::Color(110, 110, 115));
+        leftBase.setPosition(sf::Vector2f(505.0f, riverTopY + pillarHeight - 18));
+
+        sf::RectangleShape rightPillar(sf::Vector2f(pillarWidth, pillarHeight));
+        rightPillar.setFillColor(sf::Color(85, 85, 85));
+        rightPillar.setOutlineColor(sf::Color(110, 110, 115));
+        rightPillar.setPosition(sf::Vector2f(725.0f, riverTopY));
+
+        sf::RectangleShape rightBase(sf::Vector2f(pillarWidth+10, 18.0f));
+        rightBase.setFillColor(sf::Color(85, 85, 85));
+        rightBase.setOutlineColor(sf::Color(110, 110, 115));
+        rightBase.setPosition(sf::Vector2f(720.0f, riverTopY + pillarHeight - 18));
+
+        window.draw(leftPillar);
+        window.draw(rightPillar);
+        
+        window.draw(leftBase);
+        window.draw(rightBase);
+
+        leftCar.draw(window);
+        rightCar.draw(window);
+
+        // Anchor node below the left bridge
+        sf::CircleShape redDot(4.0f); // radius 4
+        redDot.setOrigin(sf::Vector2f(4.0f, 4.0f)); // center origin
+        redDot.setPosition(sf::Vector2f(343.0f, 480.0f)); // slightly below the default (343, 440)
+        redDot.setFillColor(sf::Color(210, 30, 30));
+        window.draw(redDot);
+
+        // Anchor node below the right bridge
+        redDot.setPosition(sf::Vector2f(937.0f, 480.0f)); // slightly below the default (937, 440)
+        window.draw(redDot);
+        
+        // Anchor node above the pillars
+        redDot.setPosition(sf::Vector2f(540.0f, riverTopY));
+        window.draw(redDot);
+        redDot.setPosition(sf::Vector2f(755.0f, riverTopY));
+        window.draw(redDot);        
+        
         hud.draw(window, simRunning);
         window.display();
     }

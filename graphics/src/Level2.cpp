@@ -72,6 +72,10 @@ void Level2::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
                         simRunning = false;
                         currentLevel = 3;
                         return;
+                    } else if (action == "level_4") {
+                        simRunning = false;
+                        currentLevel = 4;
+                        return;
                     }
 
                     const bool hudCapturedClick = !action.empty() || hud.isPointInHUD(mouseF);

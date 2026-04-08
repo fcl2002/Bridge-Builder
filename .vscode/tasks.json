@@ -31,6 +31,7 @@
         "graphics/src/Level.cpp",
         "graphics/src/Level2.cpp",
         "graphics/src/Level3.cpp",
+        "graphics/src/Level4.cpp",
         "-LC:/SFML-3.0.2/lib",
         "-lsfml-graphics",
         "-lsfml-window",

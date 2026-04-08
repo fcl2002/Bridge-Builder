@@ -60,6 +60,8 @@ private:
     sf::Text level2Text;
     sf::RectangleShape level3Btn;
     sf::Text level3Text;
+    sf::RectangleShape level4Btn;
+    sf::Text level4Text;
 
     bool menuOpen = false;
 };
