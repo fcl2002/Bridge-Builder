@@ -1,6 +1,7 @@
 #include "../include/Scene.h"
 
 #include <cmath>
+#include <iostream>
 
 namespace {
 sf::Vector2f clampSegmentEnd(const sf::Vector2f& start, const sf::Vector2f& end, float maxLength) {
@@ -37,6 +38,7 @@ Scene::Scene(bool drawCar_) : car(sf::Vector2f(30.0f, 440.0f)), drawCar(drawCar_
     createRiver();
     createDarkGrayBridgeRight();
     createSlopeRight();
+    createFlag();
     createFixedNodes();
 }
 
@@ -94,6 +96,20 @@ void Scene::createDarkGrayBridgeRight() {
     darkGrayBridgeRight.setPoint(3, sf::Vector2f( 950, 600));
     darkGrayBridgeRight.setPoint(4, sf::Vector2f(1010, 600));
     darkGrayBridgeRight.setFillColor(sf::Color(50, 50, 50));
+}
+
+void Scene::createFlag() {
+    if (flagTexture.getSize().x == 0u) {
+        if (flagTexture.loadFromFile("assets/icons/flag.png") ||
+            flagTexture.loadFromFile("graphics/assets/icons/flag.png")) {
+            flagTexture.setSmooth(false);
+            flagLoaded = true;
+            flagSprite = std::make_unique<sf::Sprite>(flagTexture);
+            flagSprite->setPosition(sf::Vector2f(1100.0f, 380.0f));
+        } else {
+            std::cout << "[ERROR] Failed to load flag texture: assets/icons/flag.png\n";
+        }
+    }
 }
 
 void Scene::createSlopeRight() {
@@ -174,6 +190,10 @@ void Scene::draw(sf::RenderWindow& window) {
     window.draw(darkGrayBridgeLeft);
     window.draw(slopeRight);
     window.draw(darkGrayBridgeRight);
+
+    if (flagLoaded && flagSprite) {
+        window.draw(*flagSprite);
+    }
 
     // Draw the car only if enabled (Level 1)
     if (drawCar) {

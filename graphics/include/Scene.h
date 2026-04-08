@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <memory>
 #include "Car.h"
 
 class Scene {
@@ -17,6 +18,9 @@ private:
     sf::ConvexShape river;
     sf::ConvexShape darkGrayBridgeRight;
     sf::ConvexShape slopeRight;
+    sf::Texture flagTexture;
+    std::unique_ptr<sf::Sprite> flagSprite;
+    bool flagLoaded = false;
 
     Car car;
     sf::CircleShape fixedNodeLeft;
@@ -36,6 +40,7 @@ private:
     void createRiver();
     void createDarkGrayBridgeRight();
     void createSlopeRight();
+    void createFlag();
     void createFixedNodes();
 
 public:
