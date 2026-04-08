@@ -90,35 +90,21 @@ void Level4::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
         scene.draw(window); // bridge, terrain and river
 
         // Visual pillars in the middle of the river (support towers for the bridge)
-        const float riverTopY = 500.0f;          // approximate water/top-of-river line
+        const float riverTopY = 400.0f;
         const float pillarWidth = 60.0f;
-        const float pillarHeight = 110.0f;
+        const float pillarHeight = 200.0f;
 
         sf::RectangleShape leftPillar(sf::Vector2f(pillarWidth, pillarHeight));
         leftPillar.setFillColor(sf::Color(85, 85, 85));
-        leftPillar.setOutlineColor(sf::Color(110, 110, 115));
-        leftPillar.setPosition(sf::Vector2f(510.0f, riverTopY));
+        // leftPillar.setOutlineColor(sf::Color(221, 179, 127));
+        leftPillar.setPosition(sf::Vector2f(617.5f, riverTopY));
 
         sf::RectangleShape leftBase(sf::Vector2f(pillarWidth+10, 18.0f));
-        leftBase.setFillColor(sf::Color(85, 85, 85)); // rgb(85, 85, 85)
-        leftBase.setOutlineColor(sf::Color(110, 110, 115));
-        leftBase.setPosition(sf::Vector2f(505.0f, riverTopY + pillarHeight - 18));
-
-        sf::RectangleShape rightPillar(sf::Vector2f(pillarWidth, pillarHeight));
-        rightPillar.setFillColor(sf::Color(85, 85, 85));
-        rightPillar.setOutlineColor(sf::Color(110, 110, 115));
-        rightPillar.setPosition(sf::Vector2f(725.0f, riverTopY));
-
-        sf::RectangleShape rightBase(sf::Vector2f(pillarWidth+10, 18.0f));
-        rightBase.setFillColor(sf::Color(85, 85, 85));
-        rightBase.setOutlineColor(sf::Color(110, 110, 115));
-        rightBase.setPosition(sf::Vector2f(720.0f, riverTopY + pillarHeight - 18));
+        leftBase.setFillColor(sf::Color(85, 85, 85)); // rgb(221, 179, 127)
+        leftBase.setPosition(sf::Vector2f(612.5f, riverTopY + pillarHeight - 18));
 
         window.draw(leftPillar);
-        window.draw(rightPillar);
-        
         window.draw(leftBase);
-        window.draw(rightBase);
 
         leftCar.draw(window);
         rightCar.draw(window);
@@ -132,13 +118,7 @@ void Level4::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
 
         // Anchor node below the right bridge
         redDot.setPosition(sf::Vector2f(937.0f, 480.0f)); // slightly below the default (937, 440)
-        window.draw(redDot);
-        
-        // Anchor node above the pillars
-        redDot.setPosition(sf::Vector2f(540.0f, riverTopY));
-        window.draw(redDot);
-        redDot.setPosition(sf::Vector2f(755.0f, riverTopY));
-        window.draw(redDot);        
+        window.draw(redDot);       
         
         hud.draw(window, simRunning);
         window.display();
