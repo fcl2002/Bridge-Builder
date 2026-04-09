@@ -23,22 +23,19 @@ void Vehicle::update(const std::vector<WoodBeam*>& roadElements){
     _localOffset = 0.0f;
 
     for(WoodBeam* beam: roadElements){
+        
         if(beam->isBroken){
             hasFallen = true;
             return;
         }
-
         float len = beam->restLength;
-
         if(currPos <= accumulated + len){
-            currElem = beam;
+            currElem     = beam;
             _localOffset = accumulated;
             break;
         }
         accumulated += len;
     }
-
-    if(!currElem) return;
 }
 
 void Vehicle::applyWeightToNodes(){
