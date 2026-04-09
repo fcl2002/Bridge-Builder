@@ -32,10 +32,7 @@ bool Level::canAddBeam(const Node* nodeA, const Node* nodeB, float cost) const{
 WoodBeam* Level::tryAddBeam(Node* nodeA, Node* nodeB, float cost, bool isRoad){
     if(!canAddBeam(nodeA, nodeB, cost)) return nullptr;
 
-    float maxTensile = isRoad ? 0.12f : 0.40f;
-    float maxCompressive = isRoad ? 0.20f : 0.45f;
-
-    return bridge.addWoodBeam(nodeA, nodeB, maxTensile, maxCompressive, isRoad, cost);
+    return bridge.addWoodBeam(nodeA, nodeB, Physics::FORCE_BEAM_MAX, isRoad, cost);
 }
 
 Vehicle Level::createVehicle(float weight, float speed) const{

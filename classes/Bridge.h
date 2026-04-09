@@ -39,8 +39,7 @@ class Bridge{
      * @return Pointer to the newly created wood beam element
      */
     WoodBeam* addWoodBeam(Node* nodeA, Node* nodeB,
-                       float maxTensileStress = 0.04f,
-                       float maxCompressiveStress = 0.08f,
+                       float forceBeamMax = Physics::FORCE_BEAM_MAX,
                        bool isRoad = false,
                        float cost = 1.0f);
 
@@ -60,5 +59,6 @@ class Bridge{
         void applyElementForces();
         void updateNodes();
         void checkCollapse();
+        void checkAllBreaking(); 
         void applyVehicleForces(const std::vector<Vehicle*>& vehicles);
 };

@@ -3,6 +3,8 @@
 #include "Physics.h"
 #include "Vehicle.h"
 
+
+
 Bridge::Bridge():
     hasCollapsed(false), totalCost(0.0f)
 {}
@@ -13,15 +15,14 @@ Node* Bridge::addNode(Vec2 position, float mass, bool isFix){
 }
 
 WoodBeam* Bridge::addWoodBeam(Node* nodeA, Node* nodeB,
-                       float maxTensileStress,
-                       float maxCompressiveStress,
+                       float forceBeamMax,
                        bool isRoad,
                        float cost){
     float restLength = (nodeB->position - nodeA->position).magnitude();
 
     auto beam = std::make_unique<WoodBeam>(
         nodeA, nodeB, restLength,
-        maxTensileStress, maxCompressiveStress,
+        forceBeamMax,
         isRoad, cost
     );
 
@@ -32,14 +33,14 @@ WoodBeam* Bridge::addWoodBeam(Node* nodeA, Node* nodeB,
     return ptr;
 }
 
-void Bridge::step(const std::vector<Vehicle*>& vehicles){
+    void Bridge::step(const std::vector<Vehicle*>& vehicles){
     if(hasCollapsed) return;
-
     clearForces();
     applyGravity();
-    applyElementForces();
     applyVehicleForces(vehicles);
+    applyElementForces();
     updateNodes();
+    checkAllBreaking();
     checkCollapse();
 }
 
@@ -75,6 +76,12 @@ void Bridge::updateNodes(){
     }
 }
 
+void Bridge::checkAllBreaking(){
+    for(auto& element: elements){
+        element->checkBreaking();
+    }
+}
+
 void Bridge::checkCollapse(){
     int roadCount = 0;
     int brokenRoads = 0;
@@ -88,6 +95,6 @@ void Bridge::checkCollapse(){
 
     if(roadCount > 0 && roadCount == brokenRoads){
         hasCollapsed = true;
-    }
+    } 
 
 }
