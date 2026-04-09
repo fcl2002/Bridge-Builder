@@ -1,7 +1,7 @@
 //WoodBeam.h
 #pragma once
 #include "Element.h"
-
+#include "Physics.h"
 /**
  * @brief WoodBeam is a concrete implementation of Element representing a wooden beam
  * The axial rigidity is defined by k = E * A / L, where:
@@ -17,8 +17,7 @@
         static constexpr float ELASTIC_MODULUS = 10e9f; //Pa
         static constexpr float SECTION_AREA    = 0.01f; //m^2
 
-        float maxTensileStress;
-        float maxCompressiveStress;
+        float forceBeamMax; 
         float stiffness;
         float colorFactor; //For visual representation (0 = no stress, 1 = breaking point)
         float isRoad;
@@ -36,8 +35,7 @@
         WoodBeam(Node* nodeA,
                  Node* nodeB,
                  float restLength,
-                 float maxTensileStress = 0.05f,
-                 float maxCompressiveStress = 0.10f,
+                 float forceBeamMax = Physics::FORCE_BEAM_MAX,
                  bool isRoad = false,
                  float cost = 1.0f);
 
