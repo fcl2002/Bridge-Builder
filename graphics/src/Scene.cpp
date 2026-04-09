@@ -33,7 +33,7 @@ void drawWoodSegment(sf::RenderWindow& window, const sf::Vector2f& start, const 
 
 Scene::Scene() : car(sf::Vector2f(30.0f, 440.0f)),
     carBasePos(30.0f, 440.0f),
-    vehicle(3120.0f, 2.0f) // weight in N (heavy), speed in px/s (slow)
+    vehicle(780.0f, 1.0f) // weight in N , speed in px/s 
 {
     createGrass();
     createSlopeLeft();
@@ -190,18 +190,18 @@ void Scene::createFixedNodes() {
 
     fixedNodeLeft.setRadius(radius);
     fixedNodeLeft.setOrigin(sf::Vector2f(radius, radius));
-    fixedNodeLeft.setPosition(sf::Vector2f(343.0f, 440.0f));
+    fixedNodeLeft.setPosition(sf::Vector2f(420.0f, 440.0f));
     fixedNodeLeft.setFillColor(sf::Color(210, 30, 30));
 
     // Fixed anchor node at the right end of the bridge deck (x=977, y=440)
     fixedNodeRight.setRadius(radius);
     fixedNodeRight.setOrigin(sf::Vector2f(radius, radius));
-    fixedNodeRight.setPosition(sf::Vector2f(937.0f, 440.0f));
+    fixedNodeRight.setPosition(sf::Vector2f(850.0f, 440.0f));
     fixedNodeRight.setFillColor(sf::Color(210, 30, 30));
 
     // Add corresponding fixed nodes to the physics bridge model
-    bridge.addNode(Vec2(343.0f, 440.0f), 1.0f, true);
-    bridge.addNode(Vec2(937.0f, 440.0f), 1.0f, true);
+    bridge.addNode(Vec2(420.0f, 440.0f), 1.0f, true);
+    bridge.addNode(Vec2(850.0f, 440.0f), 1.0f, true);
 }
 
 bool Scene::startWoodSegment(const sf::Vector2f& mousePos, float maxLengthPixels) {
@@ -263,14 +263,13 @@ int Scene::commitWoodSegment(int& budget, float woodCostPerPixel) {
 
             // stronger structural beams so truss builds improve robustness;
             // road beams remain more flexível para simular pavimentação.
-            float maxTensile = isRoad ? 0.12f : 0.40f;
-            float maxCompressive = isRoad ? 0.20f : 0.45f;
-
-            bridge.addWoodBeam(currentStartNode, endNode, maxTensile, maxCompressive, isRoad);
+            float forceMax = isRoad ? Physics::FORCE_BEAM_MAX * 0.8f : Physics::FORCE_BEAM_MAX;
+            bridge.addWoodBeam(currentStartNode, endNode, forceMax, isRoad);
             budget -= cost;
             return cost;
         }
     }
+    
 
     return 0;
 }

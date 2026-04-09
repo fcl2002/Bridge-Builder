@@ -8,12 +8,14 @@
  */
 class Physics{
     public:
-        static constexpr float GRAVITY = 9.81f; //m/s², acceleration due to gravity
-        static constexpr float DAMPING = 0.91f; // Allow more oscillation to see bridge deformation clearly
-        static constexpr float DT      = 0.016f; //s, time step for integration (60 FPS)
-        static constexpr float STIFFNESS_SCALE = 0.0004f;
+        static constexpr float GRAVITY        = 9.81f; // m/s² 
+        static constexpr float DAMPING        = 0.99f;          
+        static constexpr float DT             = 0.016f;         // s, step (60 FPS)
 
+       
+        static constexpr float K_STIFFNESS     = 1000.0f; // N/px 
+        static constexpr float FORCE_BEAM_MAX  = 2000.0f; // N 
+        static constexpr float MASS_PER_LENGTH = 0.00f;   // kg/px 
 
-        // Prevent instantiation of the Physics class
         Physics() = delete;
 };
