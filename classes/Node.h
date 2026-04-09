@@ -17,6 +17,8 @@
         Vec2 forceAccumulator;
         float mass;
         bool isFix;
+        Vec2  initialPosition;    
+        float accumulatedMass;  
 
         /**
          * @param position Initial position of the node
@@ -50,4 +52,6 @@
          * Called after each integration step to clear forces for the next frame
          */
         void clearForces();
+
+        void addMass(float m){ accumulatedMass += m; }
  };

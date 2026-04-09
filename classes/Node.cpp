@@ -1,12 +1,14 @@
 //Node.cpp
 #include "Node.h"
-
+#include <iostream>
 Node::Node(Vec2 position, float mass, bool isFix):
     position(position),
+    initialPosition(position),
     velocity(Vec2()),
     forceAccumulator(Vec2()),
     mass(mass),
-    isFix(isFix)
+    isFix(isFix),
+    accumulatedMass(0.0f)
 {}
 
 void Node::applyForce(const Vec2& force){
@@ -17,8 +19,11 @@ void Node::applyForce(const Vec2& force){
 void Node::update(){
     if(isFix) return; //Fixed nodes do not move
 
+    float effectiveMass = mass + accumulatedMass;
+   
+
     //1. a = F / m (Newton's second law)
-    Vec2 acceleration = forceAccumulator / mass;
+    Vec2 acceleration = forceAccumulator / effectiveMass;
 
     //2. v += a * dt (Symplectic Euler velocity update)
     velocity += acceleration * Physics::DT;
@@ -35,4 +40,6 @@ void Node::update(){
 
 void Node::clearForces(){
     forceAccumulator.zero();
+    accumulatedMass = 0.0f;  
+
 }
