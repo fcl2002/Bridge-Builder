@@ -2,8 +2,7 @@
 
 void Level4::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning, int& currentLevel) {
     constexpr float MAX_WOOD_SEGMENT_LENGTH = 80.0f;
-    // Do not draw the car in Level 2
-    Scene scene(false);
+    Scene scene(true, true);// Both car and truck enabled
 
     sf::VertexArray sky(sf::PrimitiveType::TriangleStrip, 4);
     sky[0].position = sf::Vector2f(0, 0);
@@ -12,9 +11,6 @@ void Level4::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
     sky[3].position = sf::Vector2f(1200, 800);
     sky[0].color = sky[1].color = sf::Color(80, 193, 198);
     sky[2].color = sky[3].color = sf::Color(200, 235, 240);
-
-    Car leftCar(sf::Vector2f(40.0f, 440.0f));
-    Car rightCar(sf::Vector2f(180.0f, 440.0f));
 
     while (window.isOpen()) {
         sf::Vector2f mouseF(sf::Mouse::getPosition(window));
@@ -29,6 +25,9 @@ void Level4::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
                     const std::string action = hud.handleClick(mouseF);
                     if (action == "play") {
                         simRunning = !simRunning;
+                        if (simRunning) {
+                            scene.resetSimulation();
+                        }
                     } else if (action == "reset") {
                         simRunning = false;
                         score = 0;
@@ -85,9 +84,13 @@ void Level4::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
             }
         }
 
+        if (simRunning) {
+            scene.simulateStep();
+        }
+
         window.clear();
         window.draw(sky);
-        scene.draw(window); // bridge, terrain and river
+        scene.draw(window, simRunning);
 
         // Visual pillars in the middle of the river (support towers for the bridge)
         const float riverTopY = 400.0f;
@@ -105,9 +108,6 @@ void Level4::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
 
         window.draw(leftPillar);
         window.draw(leftBase);
-
-        leftCar.draw(window);
-        rightCar.draw(window);
 
         // Anchor node below the left bridge
         sf::CircleShape redDot(4.0f); // radius 4

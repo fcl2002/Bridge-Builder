@@ -4,8 +4,7 @@
 
 void Level3::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning, int& currentLevel) {
     constexpr float MAX_WOOD_SEGMENT_LENGTH = 80.0f;
-    // Do not draw the car in Level 2
-    Scene scene(false);
+    Scene scene(true, true); // Both car and truck enabled
 
     sf::VertexArray sky(sf::PrimitiveType::TriangleStrip, 4);
     sky[0].position = sf::Vector2f(0, 0);
@@ -14,33 +13,6 @@ void Level3::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
     sky[3].position = sf::Vector2f(1200, 800);
     sky[0].color = sky[1].color = sf::Color(80, 193, 198);
     sky[2].color = sky[3].color = sf::Color(200, 235, 240);
-
-    sf::Texture truckTexture;
-    std::unique_ptr<sf::Sprite> truckSprite;
-    Car carVehicle(sf::Vector2f(200.0f, 440.0f));
-    bool truckLoaded = false;
-    if (truckTexture.loadFromFile("assets/icons/truck.png")) {
-        std::cout << "[OK] Loaded truck sprite: assets/icons/truck.png\n";
-        truckLoaded = true;
-    } else if (truckTexture.loadFromFile("graphics/assets/icons/truck.png")) {
-        std::cout << "[OK] Loaded truck sprite: graphics/assets/icons/truck.png\n";
-        truckLoaded = true;
-    } else {
-        std::cout << "[ERROR] Failed to load truck sprite: assets/icons/truck.png\n";
-    }
-
-    if (truckLoaded) {
-        truckSprite = std::make_unique<sf::Sprite>(truckTexture);
-        // Set truck size and position directly (pixel-perfect)
-        const float targetWidth = 144.0f;
-        const float targetHeight = 72.0f;
-        const auto size = truckTexture.getSize();
-        float scaleX = targetWidth / static_cast<float>(size.x);
-        float scaleY = targetHeight / static_cast<float>(size.y);
-        truckSprite->setScale(sf::Vector2f(scaleX, scaleY));
-        // Place the truck at a fixed pixel position
-        truckSprite->setPosition({30.0f, 368.0f});
-    }
 
     while (window.isOpen()) {
         sf::Vector2f mouseF(sf::Mouse::getPosition(window));
@@ -55,6 +27,9 @@ void Level3::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
                     const std::string action = hud.handleClick(mouseF);
                     if (action == "play") {
                         simRunning = !simRunning;
+                        if (simRunning) {
+                            scene.resetSimulation();
+                        }
                     } else if (action == "reset") {
                         simRunning = false;
                         score = 0;
@@ -111,9 +86,13 @@ void Level3::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
             }
         }
 
+        if (simRunning) {
+            scene.simulateStep();
+        }
+
         window.clear();
         window.draw(sky);
-        scene.draw(window); // bridge, terrain and river
+        scene.draw(window, simRunning);
 
         // Visual pillars in the middle of the river (support towers for the bridge)
         const float riverTopY = 500.0f;          // approximate water/top-of-river line
@@ -145,12 +124,6 @@ void Level3::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
         
         window.draw(leftBase);
         window.draw(rightBase);
-
-        if (truckSprite) {
-            window.draw(*truckSprite);
-        }
-
-        carVehicle.draw(window);
 
         // Anchor node below the left bridge
         sf::CircleShape redDot(4.0f); // radius 4

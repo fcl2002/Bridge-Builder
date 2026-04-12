@@ -2,7 +2,7 @@
 
 void Level1::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning, int& currentLevel) {
     constexpr float MAX_WOOD_SEGMENT_LENGTH = 80.0f;
-    Scene scene;
+    Scene scene(true, false);
 
     sf::VertexArray sky(sf::PrimitiveType::TriangleStrip, 4);
     sky[0].position = sf::Vector2f(0, 0);
@@ -25,6 +25,9 @@ void Level1::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
                     const std::string action = hud.handleClick(mouseF);
                     if (action == "play") {
                         simRunning = !simRunning;
+                        if (simRunning) {
+                            scene.resetSimulation();
+                        }
                     } else if (action == "reset") {
                         simRunning = false;
                         score = 0;
@@ -81,9 +84,13 @@ void Level1::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
             }
         }
 
+        if (simRunning) {
+            scene.simulateStep();
+        }
+
         window.clear();
         window.draw(sky);
-        scene.draw(window);
+        scene.draw(window, simRunning);
         hud.draw(window, simRunning);
         window.display();
     }

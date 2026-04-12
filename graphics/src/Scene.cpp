@@ -32,10 +32,14 @@ void drawWoodSegment(sf::RenderWindow& window, const sf::Vector2f& start, const 
 }
 }
 
-// Scene constructor. If drawCar is false, the car will not be drawn (used for Level 2).
-Scene::Scene(bool drawCar_) : car(sf::Vector2f(30.0f, 440.0f)), drawCar(drawCar_),
-    carBasePos(30.0f, 440.0f),
-    vehicle(780.0f, 1.0f) // weight in N , speed in px/s 
+Scene::Scene(bool enableCarVehicle, bool enableTruckVehicle)
+    : car(sf::Vector2f(30.0f, 440.0f)),
+      carBasePos(30.0f, 440.0f),
+      carVehicle(780.0f, 1.0f), // weight in N , speed in px/s
+      truckBasePos(30.0f, 440.0f),
+      truckVehicle(900.0f, 0.8f),
+      hasCarVehicle(enableCarVehicle),
+      hasTruckVehicle(enableTruckVehicle)
 {
     createGrass();
     createSlopeLeft();
@@ -45,6 +49,10 @@ Scene::Scene(bool drawCar_) : car(sf::Vector2f(30.0f, 440.0f)), drawCar(drawCar_
     createSlopeRight();
     createFlag();
     createFixedNodes();
+
+    if (hasTruckVehicle) {
+        createTruck();
+    }
 }
 
 Node* Scene::findNode(const sf::Vector2f& pos, float threshold) {
@@ -82,9 +90,41 @@ void Scene::setCarPosition(const sf::Vector2f& target) {
     carBasePos = target;
 }
 
+void Scene::setTruckPosition(const sf::Vector2f& target) {
+    if (!truckSprite) {
+        return;
+    }
+
+    sf::Vector2f delta = target - truckBasePos;
+    truckSprite->move(delta);
+    truckBasePos = target;
+}
+
+void Scene::createTruck() {
+    if (truckTexture.loadFromFile("assets/icons/truck.png") ||
+        truckTexture.loadFromFile("graphics/assets/icons/truck.png")) {
+        truckLoaded = true;
+        truckSprite = std::make_unique<sf::Sprite>(truckTexture);
+
+        const float targetWidth = 144.0f;
+        const float targetHeight = 72.0f;
+        const auto size = truckTexture.getSize();
+        float scaleX = targetWidth / static_cast<float>(size.x);
+        float scaleY = targetHeight / static_cast<float>(size.y);
+        truckSprite->setScale(sf::Vector2f(scaleX, scaleY));
+
+        // Align truck base to bridge deck.
+        truckSprite->setPosition(sf::Vector2f(truckBasePos.x, truckBasePos.y - targetHeight));
+    } else {
+        std::cout << "[ERROR] Failed to load truck sprite: assets/icons/truck.png\n";
+    }
+}
+
 void Scene::resetSimulation() {
-    vehicle.currPos = 0.0f;
-    vehicle.hasFallen = false;
+    carVehicle.currPos = 0.0f;
+    carVehicle.hasFallen = false;
+    truckVehicle.currPos = 0.0f;
+    truckVehicle.hasFallen = false;
 
     // Start the car at the beginning of the road, if available
     auto roads = getRoadBeams();
@@ -94,26 +134,51 @@ void Scene::resetSimulation() {
         if (first->nodeB->position.x < startPos.x) {
             startPos = first->nodeB->position;
         }
-        setCarPosition(sf::Vector2f(startPos.x, startPos.y));
+        if (hasCarVehicle) {
+            setCarPosition(sf::Vector2f(startPos.x, startPos.y));
+        }
+        if (hasTruckVehicle) {
+            setTruckPosition(sf::Vector2f(startPos.x, startPos.y));
+        }
     } else {
         // Default position
-        setCarPosition(sf::Vector2f(30.0f, 440.0f));
+        if (hasCarVehicle) {
+            setCarPosition(sf::Vector2f(30.0f, 440.0f));
+        }
+        if (hasTruckVehicle) {
+            setTruckPosition(sf::Vector2f(30.0f, 440.0f));
+        }
     }
 }
 
 void Scene::simulateStep() {
     // Update vehicle position along the road segments
     auto roads = getRoadBeams();
-    vehicle.update(roads);
+    if (hasCarVehicle) {
+        carVehicle.update(roads);
+    }
+    if (hasTruckVehicle) {
+        truckVehicle.update(roads);
+    }
 
     // Apply simulation forces (bridge + vehicle)
-    std::vector<Vehicle*> vehicles = { &vehicle };
+    std::vector<Vehicle*> vehicles;
+    if (hasCarVehicle) {
+        vehicles.push_back(&carVehicle);
+    }
+    if (hasTruckVehicle) {
+        vehicles.push_back(&truckVehicle);
+    }
     bridge.step(vehicles);
 
-    // Update car visual position if still on the bridge, otherwise stop
-    if (!vehicle.hasFallen) {
-        Vec2 pos = vehicle.getPosition();
+    if (hasCarVehicle && !carVehicle.hasFallen) {
+        Vec2 pos = carVehicle.getPosition();
         setCarPosition(sf::Vector2f(pos.x, pos.y));
+    }
+
+    if (hasTruckVehicle && !truckVehicle.hasFallen) {
+        Vec2 pos = truckVehicle.getPosition();
+        setTruckPosition(sf::Vector2f(pos.x, pos.y));
     }
 }
 
@@ -304,10 +369,18 @@ void Scene::clearWoodSegments() {
     woodDragActive = false;
     currentStartNode = nullptr;
 
-    // Reset vehicle and car to initial state
-    vehicle.currPos = 0.0f;
-    vehicle.hasFallen = false;
-    setCarPosition(sf::Vector2f(30.0f, 440.0f));
+    // Reset vehicles to initial state
+    carVehicle.currPos = 0.0f;
+    carVehicle.hasFallen = false;
+    truckVehicle.currPos = 0.0f;
+    truckVehicle.hasFallen = false;
+
+    if (hasCarVehicle) {
+        setCarPosition(sf::Vector2f(30.0f, 440.0f));
+    }
+    if (hasTruckVehicle) {
+        setTruckPosition(sf::Vector2f(30.0f, 440.0f));
+    }
 
     // Recreate the fixed anchor nodes
     createFixedNodes();
@@ -325,9 +398,12 @@ void Scene::draw(sf::RenderWindow& window, bool simRunning) {
         window.draw(*flagSprite);
     }
 
-    // Draw the car only if enabled (Level 1)
-    if (drawCar) {
+    if (hasCarVehicle) {
         car.draw(window);
+    }
+
+    if (hasTruckVehicle && truckLoaded && truckSprite) {
+        window.draw(*truckSprite);
     }
 
     constexpr float woodThickness = 7.0f; // Thickness of the beams
