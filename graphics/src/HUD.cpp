@@ -140,26 +140,34 @@ HUD::HUD(const sf::Font& font, int level, int score, int budget)
     menuOverlay.setSize(sf::Vector2f(1200.0f, 800.0f));
     menuOverlay.setFillColor(sf::Color(0, 0, 0, 180));
 
-    menuPanel.setSize(sf::Vector2f(400.0f, 380.0f));
-    menuPanel.setPosition(sf::Vector2f(400.0f, 210.0f));
+    const sf::Vector2f menuPanelSize(400.0f, 310.0f);
+    const sf::Vector2f menuPanelPos(400.0f, (800.0f - menuPanelSize.y) / 2.0f);
+    menuPanel.setSize(menuPanelSize);
+    menuPanel.setPosition(menuPanelPos);
     menuPanel.setFillColor(sf::Color(40, 40, 40, 230));
     menuPanel.setOutlineColor(sf::Color::White);
     menuPanel.setOutlineThickness(2.0f);
 
-    level1Btn.setSize(sf::Vector2f(280.0f, 50.0f));
-    level1Btn.setPosition(sf::Vector2f(460.0f, 270.0f));
+    const sf::Vector2f levelButtonSize(280.0f, 50.0f);
+    const float levelButtonGap = 20.0f;
+    const float verticalPadding = 60.0f;
+    const float levelButtonX = menuPanelPos.x + (menuPanelSize.x - levelButtonSize.x) / 2.0f;
+    const float firstButtonY = menuPanelPos.y + verticalPadding;
+
+    level1Btn.setSize(levelButtonSize);
+    level1Btn.setPosition(sf::Vector2f(levelButtonX, firstButtonY));
     level1Btn.setFillColor(sf::Color(38, 166, 154));
     level1Btn.setOutlineColor(sf::Color(0, 77, 64));
     level1Btn.setOutlineThickness(2.0f);
 
-    level2Btn.setSize(sf::Vector2f(280.0f, 50.0f));
-    level2Btn.setPosition(sf::Vector2f(460.0f, 340.0f));
+    level2Btn.setSize(levelButtonSize);
+    level2Btn.setPosition(sf::Vector2f(levelButtonX, firstButtonY + levelButtonSize.y + levelButtonGap));
     level2Btn.setFillColor(sf::Color(38, 166, 154));
     level2Btn.setOutlineColor(sf::Color(0, 77, 64));
     level2Btn.setOutlineThickness(2.0f);
 
-    level3Btn.setSize(sf::Vector2f(280.0f, 50.0f));
-    level3Btn.setPosition(sf::Vector2f(460.0f, 410.0f));
+    level3Btn.setSize(levelButtonSize);
+    level3Btn.setPosition(sf::Vector2f(levelButtonX, firstButtonY + 2.0f * (levelButtonSize.y + levelButtonGap)));
     level3Btn.setFillColor(sf::Color(38, 166, 154));
     level3Btn.setOutlineColor(sf::Color(0, 77, 64));
     level3Btn.setOutlineThickness(2.0f);
@@ -167,17 +175,25 @@ HUD::HUD(const sf::Font& font, int level, int score, int budget)
     level1Text.setCharacterSize(18);
     level1Text.setFillColor(sf::Color::White);
     level1Text.setString("Level 1");
-    level1Text.setPosition(sf::Vector2f(545.0f, 285.0f));
 
     level2Text.setCharacterSize(18);
     level2Text.setFillColor(sf::Color::White);
     level2Text.setString("Level 2");
-    level2Text.setPosition(sf::Vector2f(545.0f, 355.0f));
 
     level3Text.setCharacterSize(18);
     level3Text.setFillColor(sf::Color::White);
     level3Text.setString("Level 3");
-    level3Text.setPosition(sf::Vector2f(545.0f, 425.0f));
+    auto centerTextInButton = [](sf::Text& text, const sf::RectangleShape& button) {
+        const sf::FloatRect textBounds = text.getLocalBounds();
+        const sf::FloatRect buttonBounds = button.getGlobalBounds();
+        const float textX = buttonBounds.position.x + (buttonBounds.size.x - textBounds.size.x) / 2.0f - textBounds.position.x;
+        const float textY = buttonBounds.position.y + (buttonBounds.size.y - textBounds.size.y) / 2.0f - textBounds.position.y;
+        text.setPosition(sf::Vector2f(textX, textY));
+    };
+
+    centerTextInButton(level1Text, level1Btn);
+    centerTextInButton(level2Text, level2Btn);
+    centerTextInButton(level3Text, level3Btn);
 
 }
 

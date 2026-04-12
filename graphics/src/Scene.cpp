@@ -214,16 +214,18 @@ void Scene::createSlopeLeft() {
     slopeLeft.setPoint(4, sf::Vector2f(224, 608));
     slopeLeft.setPoint(5, sf::Vector2f(200, 612));
     slopeLeft.setPoint(6, sf::Vector2f(  0, 615));
-    slopeLeft.setFillColor(sf::Color(122, 122, 122));
+    slopeLeft.setFillColor(sf::Color(50, 50, 50));
 }
 
 void Scene::createDarkGrayBridgeLeft() {
-    darkGrayBridgeLeft.setPointCount(5);
+    darkGrayBridgeLeft.setPointCount(7);
     darkGrayBridgeLeft.setPoint(0, sf::Vector2f(150, 440));
-    darkGrayBridgeLeft.setPoint(1, sf::Vector2f(343, 440));
-    darkGrayBridgeLeft.setPoint(2, sf::Vector2f(343, 590));
-    darkGrayBridgeLeft.setPoint(3, sf::Vector2f(330, 600));
-    darkGrayBridgeLeft.setPoint(4, sf::Vector2f(270, 600));
+    darkGrayBridgeLeft.setPoint(1, sf::Vector2f(420, 440));
+    darkGrayBridgeLeft.setPoint(2, sf::Vector2f(420, 465));
+    darkGrayBridgeLeft.setPoint(3, sf::Vector2f(390, 480));
+    darkGrayBridgeLeft.setPoint(4, sf::Vector2f(343, 590));
+    darkGrayBridgeLeft.setPoint(5, sf::Vector2f(330, 600));
+    darkGrayBridgeLeft.setPoint(6, sf::Vector2f(270, 600));
     darkGrayBridgeLeft.setFillColor(sf::Color(50, 50, 50));
 }
 
@@ -246,12 +248,14 @@ void Scene::createRiver() {
 }
 
 void Scene::createDarkGrayBridgeRight() {
-    darkGrayBridgeRight.setPointCount(5);
+    darkGrayBridgeRight.setPointCount(7);
     darkGrayBridgeRight.setPoint(0, sf::Vector2f(1130, 440));
-    darkGrayBridgeRight.setPoint(1, sf::Vector2f( 937, 440));
-    darkGrayBridgeRight.setPoint(2, sf::Vector2f( 937, 590));
-    darkGrayBridgeRight.setPoint(3, sf::Vector2f( 950, 600));
-    darkGrayBridgeRight.setPoint(4, sf::Vector2f(1010, 600));
+    darkGrayBridgeRight.setPoint(1, sf::Vector2f( 850, 440));
+    darkGrayBridgeRight.setPoint(2, sf::Vector2f( 850, 465));
+    darkGrayBridgeRight.setPoint(3, sf::Vector2f( 880, 480));
+    darkGrayBridgeRight.setPoint(4, sf::Vector2f( 937, 590));
+    darkGrayBridgeRight.setPoint(5, sf::Vector2f( 950, 600));
+    darkGrayBridgeRight.setPoint(6, sf::Vector2f(1010, 600));
     darkGrayBridgeRight.setFillColor(sf::Color(50, 50, 50));
 }
 
@@ -262,7 +266,7 @@ void Scene::createFlag() {
             flagTexture.setSmooth(false);
             flagLoaded = true;
             flagSprite = std::make_unique<sf::Sprite>(flagTexture);
-            flagSprite->setPosition(sf::Vector2f(1100.0f, 380.0f));
+            flagSprite->setPosition(sf::Vector2f(920.0f, 380.0f));
         } else {
             std::cout << "[ERROR] Failed to load flag texture: assets/icons/flag.png\n";
         }
@@ -278,7 +282,7 @@ void Scene::createSlopeRight() {
     slopeRight.setPoint(4, sf::Vector2f(1056, 608));
     slopeRight.setPoint(5, sf::Vector2f(1080, 612));
     slopeRight.setPoint(6, sf::Vector2f(1280, 615));
-    slopeRight.setFillColor(sf::Color(122, 122, 122)); //#rgb(122, 122, 122)
+    slopeRight.setFillColor(sf::Color(50, 50, 50));
 }
 
 void Scene::createFixedNodes() {

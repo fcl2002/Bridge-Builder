@@ -5,8 +5,8 @@
 void Level3::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning, int& currentLevel) {
     constexpr float MAX_WOOD_SEGMENT_LENGTH = 80.0f;
     Scene scene(true, true); // Both car and truck enabled
-    scene.addFixedSupportNode(sf::Vector2f(420.0f, 480.0f));
-    scene.addFixedSupportNode(sf::Vector2f(850.0f, 480.0f));
+    scene.addFixedSupportNode(sf::Vector2f(420.0f, 465.0f));
+    scene.addFixedSupportNode(sf::Vector2f(850.0f, 465.0f));
 
     scene.addFixedSupportNode(sf::Vector2f(540.0f, 500.0f));
     scene.addFixedSupportNode(sf::Vector2f(755.0f, 500.0f));
