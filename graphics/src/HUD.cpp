@@ -1,8 +1,22 @@
+#include <iostream>
 #include "../include/HUD.h"
 #include <SFML/Graphics/Text.hpp>
 
+#include <initializer_list>
+
+namespace {
+bool loadTextureFromAny(sf::Texture& texture, std::initializer_list<const char*> paths) {
+    for (const char* path : paths) {
+        if (texture.loadFromFile(path)) {
+            return true;
+        }
+    }
+    return false;
+}
+}
+
 HUD::HUD(const sf::Font& font, int level, int score, int budget)
-    : hudLevel(font), hudScore(font), hudBudget(font), playIcon(3)
+    : hudLevel(font), hudScore(font), hudBudget(font), playIcon(3), level1Text(font), level2Text(font), level3Text(font), level4Text(font)
 {
     const float BTN_SIZE = 44.0f;
     const float BTN_Y = 8.0f;
@@ -56,19 +70,26 @@ HUD::HUD(const sf::Font& font, int level, int score, int budget)
     resetBg.setOutlineThickness(2.0f);
 
     // Load refresh icon
-    if (resetTexture.loadFromFile("assets/textures/refresh-icon.png")) {
+    bool loadedReset = loadTextureFromAny(resetTexture, {
+        "assets/icons/refresh-icon.png",
+        "graphics/assets/icons/refresh-icon.png",
+        "assets/icons/refresh-icon.png",
+        "graphics/assets/icons/refresh-icon.png"
+    });
+    if (loadedReset) {
+        std::cout << "[OK] Loaded reset icon.\n";
         resetSprite = std::make_unique<sf::Sprite>(resetTexture);
-        // Padding in pixels
         const float padding = 6.0f;
         float iconTargetSize = BTN_SIZE - 2 * padding;
         float scaleX = iconTargetSize / static_cast<float>(resetTexture.getSize().x);
         float scaleY = iconTargetSize / static_cast<float>(resetTexture.getSize().y);
         resetSprite->setScale(sf::Vector2f(scaleX, scaleY));
-        // Center the icon inside the button
         sf::Vector2f pos = resetBg.getPosition();
         pos.x += padding;
         pos.y += padding;
         resetSprite->setPosition(pos);
+    } else {
+        std::cout << "[ERROR] Failed to load reset icon (refresh-icon.png).\n";
     }
 
     // ---- Hamburger ----
@@ -85,38 +106,89 @@ HUD::HUD(const sf::Font& font, int level, int score, int budget)
     }
 
     // ---- Wood tool ----
-    woodBg.setSize(sf::Vector2f(1.4*BTN_SIZE, 1.4*BTN_SIZE));
-    woodBg.setPosition(sf::Vector2f(1130.0f, 120.0f));
+    woodBg.setSize(sf::Vector2f(BTN_SIZE, BTN_SIZE));
+    woodBg.setPosition(sf::Vector2f(1140.0f, 200.0f));
     woodBg.setFillColor(sf::Color(38, 166, 154)); // #26A69A
     woodBg.setOutlineColor(sf::Color(0, 77, 64)); // #004D40
     woodBg.setOutlineThickness(2.0f);
 
     // Load wood icon
-    if (woodTexture.loadFromFile("assets/textures/wood.png")) {
+    bool loadedWood = loadTextureFromAny(woodTexture, {
+        "assets/icons/wood.png",
+        "graphics/assets/icons/wood.png",
+        "assets/icons/wood.png",
+        "graphics/assets/icons/wood.png"
+    });
+    if (loadedWood) {
+        std::cout << "[OK] Loaded wood icon.\n";
         woodSprite = std::make_unique<sf::Sprite>(woodTexture);
-        // Padding for the icon
         const float padding = 8.0f;
         float iconTargetWidth = woodBg.getSize().x - 2 * padding;
         float iconTargetHeight = woodBg.getSize().y - 2 * padding;
         float scaleX = iconTargetWidth / static_cast<float>(woodTexture.getSize().x);
         float scaleY = iconTargetHeight / static_cast<float>(woodTexture.getSize().y);
         woodSprite->setScale(sf::Vector2f(scaleX, scaleY));
-        // Center the icon inside the button
         sf::Vector2f pos = woodBg.getPosition();
         pos.x += padding;
         pos.y += padding;
         woodSprite->setPosition(pos);
+    } else {
+        std::cout << "[ERROR] Failed to load wood icon (wood.png).\n";
     }
 
     // ---- Menu overlay ----
     menuOverlay.setSize(sf::Vector2f(1200.0f, 800.0f));
     menuOverlay.setFillColor(sf::Color(0, 0, 0, 180));
 
-    menuPanel.setSize(sf::Vector2f(400.0f, 300.0f));
-    menuPanel.setPosition(sf::Vector2f(400.0f, 250.0f));
+    menuPanel.setSize(sf::Vector2f(400.0f, 380.0f));
+    menuPanel.setPosition(sf::Vector2f(400.0f, 210.0f));
     menuPanel.setFillColor(sf::Color(40, 40, 40, 230));
     menuPanel.setOutlineColor(sf::Color::White);
     menuPanel.setOutlineThickness(2.0f);
+
+    level1Btn.setSize(sf::Vector2f(280.0f, 50.0f));
+    level1Btn.setPosition(sf::Vector2f(460.0f, 270.0f));
+    level1Btn.setFillColor(sf::Color(38, 166, 154));
+    level1Btn.setOutlineColor(sf::Color(0, 77, 64));
+    level1Btn.setOutlineThickness(2.0f);
+
+    level2Btn.setSize(sf::Vector2f(280.0f, 50.0f));
+    level2Btn.setPosition(sf::Vector2f(460.0f, 340.0f));
+    level2Btn.setFillColor(sf::Color(38, 166, 154));
+    level2Btn.setOutlineColor(sf::Color(0, 77, 64));
+    level2Btn.setOutlineThickness(2.0f);
+
+    level3Btn.setSize(sf::Vector2f(280.0f, 50.0f));
+    level3Btn.setPosition(sf::Vector2f(460.0f, 410.0f));
+    level3Btn.setFillColor(sf::Color(38, 166, 154));
+    level3Btn.setOutlineColor(sf::Color(0, 77, 64));
+    level3Btn.setOutlineThickness(2.0f);
+
+    level4Btn.setSize(sf::Vector2f(280.0f, 50.0f));
+    level4Btn.setPosition(sf::Vector2f(460.0f, 480.0f));
+    level4Btn.setFillColor(sf::Color(38, 166, 154));
+    level4Btn.setOutlineColor(sf::Color(0, 77, 64));
+    level4Btn.setOutlineThickness(2.0f);
+
+    level1Text.setCharacterSize(18);
+    level1Text.setFillColor(sf::Color::White);
+    level1Text.setString("Level 1");
+    level1Text.setPosition(sf::Vector2f(545.0f, 285.0f));
+
+    level2Text.setCharacterSize(18);
+    level2Text.setFillColor(sf::Color::White);
+    level2Text.setString("Level 2");
+    level2Text.setPosition(sf::Vector2f(545.0f, 355.0f));
+
+    level3Text.setCharacterSize(18);
+    level3Text.setFillColor(sf::Color::White);
+    level3Text.setString("Level 3");
+    level3Text.setPosition(sf::Vector2f(545.0f, 425.0f));
+
+    level4Text.setCharacterSize(18);
+    level4Text.setFillColor(sf::Color::White);
+    level4Text.setString("Level 4");
+    level4Text.setPosition(sf::Vector2f(545.0f, 495.0f));
 }
 
 void HUD::update(int score, int budget) {
@@ -144,6 +216,30 @@ std::string HUD::handleClick(sf::Vector2f pos) {
         clearToolSelection();
         menuOpen = !menuOpen;
         return "menu";
+    }
+
+    if (menuOpen && level1Btn.getGlobalBounds().contains(pos)) {
+        menuOpen = false;
+        clearToolSelection();
+        return "level_1";
+    }
+
+    if (menuOpen && level2Btn.getGlobalBounds().contains(pos)) {
+        menuOpen = false;
+        clearToolSelection();
+        return "level_2";
+    }
+
+    if (menuOpen && level3Btn.getGlobalBounds().contains(pos)) {
+        menuOpen = false;
+        clearToolSelection();
+        return "level_3";
+    }
+
+    if (menuOpen && level4Btn.getGlobalBounds().contains(pos)) {
+        menuOpen = false;
+        clearToolSelection();
+        return "level_4";
     }
 
     if (menuOpen && menuPanel.getGlobalBounds().contains(pos)) {
@@ -185,7 +281,8 @@ void HUD::draw(sf::RenderWindow& window, bool simRunning) const {
         window.draw(*resetSprite);
     }
 
-    // Wood tool button: apenas a imagem
+    // Wood tool
+    window.draw(woodBg);
     if (woodSprite) {
         window.draw(*woodSprite);
     }
@@ -193,11 +290,16 @@ void HUD::draw(sf::RenderWindow& window, bool simRunning) const {
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
     sf::Vector2f mousePosF(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
     if (woodBg.getGlobalBounds().contains(mousePosF)) {
-        sf::Text tooltip(hudLevel.getFont(), "Wood", 16);
+        sf::Text tooltip(hudLevel.getFont(), "Wood", 12);
         tooltip.setFillColor(sf::Color::White);
         tooltip.setOutlineColor(sf::Color(0,0,0));
         tooltip.setOutlineThickness(2.0f);
-        tooltip.setPosition(sf::Vector2f(woodBg.getPosition().x, woodBg.getPosition().y + woodBg.getSize().y + 4.0f));
+        const float spacing = 8.0f;
+        const sf::FloatRect bounds = tooltip.getLocalBounds();
+        const sf::Vector2f woodPos = woodBg.getPosition();
+        const float tooltipX = woodPos.x - bounds.size.x - spacing - bounds.position.x;
+        const float tooltipY = woodPos.y + (woodBg.getSize().y - bounds.size.y) / 2.0f - bounds.position.y;
+        tooltip.setPosition(sf::Vector2f(tooltipX, tooltipY));
         window.draw(tooltip);
     }
 
@@ -210,6 +312,14 @@ void HUD::draw(sf::RenderWindow& window, bool simRunning) const {
     if (menuOpen) {
         window.draw(menuOverlay);
         window.draw(menuPanel);
+        window.draw(level1Btn);
+        window.draw(level2Btn);
+        window.draw(level1Text);
+        window.draw(level2Text);
+        window.draw(level3Btn);
+        window.draw(level3Text);
+        window.draw(level4Btn);
+        window.draw(level4Text);
     }
 }
 

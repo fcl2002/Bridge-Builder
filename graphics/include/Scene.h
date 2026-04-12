@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <memory>
 #include "Car.h"
 #include "../../classes/Bridge.h"
 #include "../../classes/Vehicle.h"
@@ -24,6 +25,9 @@ private:
     sf::ConvexShape river;
     sf::ConvexShape darkGrayBridgeRight;
     sf::ConvexShape slopeRight;
+    sf::Texture flagTexture;
+    std::unique_ptr<sf::Sprite> flagSprite;
+    bool flagLoaded = false;
 
     // Pixel-art car (rendered on the bridge)
     Car car;
@@ -42,6 +46,8 @@ private:
     float maxWoodLength = 80.0f;
     WoodSegment previewWoodSegment;
 
+    bool drawCar = true; // Whether to draw the car (for Level 2, set to false)
+
     void createGrass();
     void createSlopeLeft();
     void createDarkGrayBridgeLeft();
@@ -49,6 +55,7 @@ private:
     void createRiver();
     void createDarkGrayBridgeRight();
     void createSlopeRight();
+    void createFlag();
     void createFixedNodes();
 
     // Helpers for simulating the vehicle and its position along the road
@@ -56,8 +63,8 @@ private:
     void setCarPosition(const sf::Vector2f& target);
 
 public:
-    Scene();
-    bool startWoodSegment(const sf::Vector2f& start, float maxLengthPixels);
+    Scene(bool drawCar = true);
+    void startWoodSegment(const sf::Vector2f& start, float maxLengthPixels);
     void updateWoodSegmentPreview(const sf::Vector2f& end);
     // Returns debited cost (0 if not created)
     Bridge& getBridge() {

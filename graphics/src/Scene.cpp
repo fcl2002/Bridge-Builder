@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 
 namespace {
 sf::Vector2f clampSegmentEnd(const sf::Vector2f& start, const sf::Vector2f& end, float maxLength) {
@@ -31,7 +32,8 @@ void drawWoodSegment(sf::RenderWindow& window, const sf::Vector2f& start, const 
 }
 }
 
-Scene::Scene() : car(sf::Vector2f(30.0f, 440.0f)),
+// Scene constructor. If drawCar is false, the car will not be drawn (used for Level 2).
+Scene::Scene(bool drawCar_) : car(sf::Vector2f(30.0f, 440.0f)), drawCar(drawCar_),
     carBasePos(30.0f, 440.0f),
     vehicle(780.0f, 1.0f) // weight in N , speed in px/s 
 {
@@ -41,6 +43,7 @@ Scene::Scene() : car(sf::Vector2f(30.0f, 440.0f)),
     createRiver();
     createDarkGrayBridgeRight();
     createSlopeRight();
+    createFlag();
     createFixedNodes();
 }
 
@@ -136,8 +139,6 @@ void Scene::createDarkGrayBridgeLeft() {
     darkGrayBridgeLeft.setPointCount(5);
     darkGrayBridgeLeft.setPoint(0, sf::Vector2f(150, 440));
     darkGrayBridgeLeft.setPoint(1, sf::Vector2f(343, 440));
-    // darkGrayBridgeLeft.setPoint(2, sf::Vector2f(343, 460));
-    // darkGrayBridgeLeft.setPoint(3, sf::Vector2f(343, 460));
     darkGrayBridgeLeft.setPoint(2, sf::Vector2f(343, 590));
     darkGrayBridgeLeft.setPoint(3, sf::Vector2f(330, 600));
     darkGrayBridgeLeft.setPoint(4, sf::Vector2f(270, 600));
@@ -172,6 +173,20 @@ void Scene::createDarkGrayBridgeRight() {
     darkGrayBridgeRight.setFillColor(sf::Color(50, 50, 50));
 }
 
+void Scene::createFlag() {
+    if (flagTexture.getSize().x == 0u) {
+        if (flagTexture.loadFromFile("assets/icons/flag.png") ||
+            flagTexture.loadFromFile("graphics/assets/icons/flag.png")) {
+            flagTexture.setSmooth(false);
+            flagLoaded = true;
+            flagSprite = std::make_unique<sf::Sprite>(flagTexture);
+            flagSprite->setPosition(sf::Vector2f(1100.0f, 380.0f));
+        } else {
+            std::cout << "[ERROR] Failed to load flag texture: assets/icons/flag.png\n";
+        }
+    }
+}
+
 void Scene::createSlopeRight() {
     slopeRight.setPointCount(7);
     slopeRight.setPoint(0, sf::Vector2f(1280, 440));
@@ -181,7 +196,7 @@ void Scene::createSlopeRight() {
     slopeRight.setPoint(4, sf::Vector2f(1056, 608));
     slopeRight.setPoint(5, sf::Vector2f(1080, 612));
     slopeRight.setPoint(6, sf::Vector2f(1280, 615));
-    slopeRight.setFillColor(sf::Color(122, 122, 122));
+    slopeRight.setFillColor(sf::Color(122, 122, 122)); //#rgb(122, 122, 122)
 }
 
 void Scene::createFixedNodes() {
@@ -306,8 +321,14 @@ void Scene::draw(sf::RenderWindow& window, bool simRunning) {
     window.draw(slopeRight);
     window.draw(darkGrayBridgeRight);
 
-    // Pixel-art car on the left ground
-    car.draw(window);
+    if (flagLoaded && flagSprite) {
+        window.draw(*flagSprite);
+    }
+
+    // Draw the car only if enabled (Level 1)
+    if (drawCar) {
+        car.draw(window);
+    }
 
     constexpr float woodThickness = 7.0f; // Thickness of the beams
     for (const auto& element : bridge.elements) {

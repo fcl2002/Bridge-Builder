@@ -54,6 +54,14 @@ private:
     // Menu overlay
     sf::RectangleShape menuOverlay;
     sf::RectangleShape menuPanel;
+    sf::RectangleShape level1Btn;
+    sf::RectangleShape level2Btn;
+    sf::Text level1Text;
+    sf::Text level2Text;
+    sf::RectangleShape level3Btn;
+    sf::Text level3Text;
+    sf::RectangleShape level4Btn;
+    sf::Text level4Text;
 
     bool menuOpen = false;
 };
