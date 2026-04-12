@@ -62,6 +62,16 @@ Node* Scene::addFixedSupportNode(const sf::Vector2f& position) {
     return node;
 }
 
+void Scene::setPreviewVehicleLayout(const sf::Vector2f& carPosition, const sf::Vector2f& truckPosition) {
+    if (hasCarVehicle) {
+        setCarPosition(carPosition);
+    }
+
+    if (hasTruckVehicle && truckSprite) {
+        setTruckPosition(truckPosition);
+    }
+}
+
 Node* Scene::findNode(const sf::Vector2f& pos, float threshold) {
     for (const auto& node : bridge.nodes) { 
         float dx = node->position.x - pos.x;

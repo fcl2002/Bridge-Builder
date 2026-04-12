@@ -74,6 +74,7 @@ private:
 public:
     Scene(bool enableCarVehicle = true, bool enableTruckVehicle = false);
     Node* addFixedSupportNode(const sf::Vector2f& position);
+    void setPreviewVehicleLayout(const sf::Vector2f& carPosition, const sf::Vector2f& truckPosition);
     bool startWoodSegment(const sf::Vector2f& start, float maxLengthPixels);
     void updateWoodSegmentPreview(const sf::Vector2f& end);
     // Returns debited cost (0 if not created)

@@ -11,6 +11,10 @@ void Level3::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
     scene.addFixedSupportNode(sf::Vector2f(540.0f, 500.0f));
     scene.addFixedSupportNode(sf::Vector2f(755.0f, 500.0f));
 
+    const sf::Vector2f previewCarPosition(170.0f, 440.0f);
+    const sf::Vector2f previewTruckPosition(30.0f, 440.0f);
+    scene.setPreviewVehicleLayout(previewCarPosition, previewTruckPosition);
+
     sf::VertexArray sky(sf::PrimitiveType::TriangleStrip, 4);
     sky[0].position = sf::Vector2f(0, 0);
     sky[1].position = sf::Vector2f(1200, 0);
@@ -40,6 +44,7 @@ void Level3::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
                         score = 0;
                         budget = getInitialBudgetForLevel(currentLevel);
                         scene.clearWoodSegments();
+                        scene.setPreviewVehicleLayout(previewCarPosition, previewTruckPosition);
                         hud.update(score, budget);
                     } else if (action == "level_1") {
                         simRunning = false;
