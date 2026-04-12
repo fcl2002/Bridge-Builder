@@ -3,6 +3,8 @@
 void Level4::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning, int& currentLevel) {
     constexpr float MAX_WOOD_SEGMENT_LENGTH = 80.0f;
     Scene scene(true, true);// Both car and truck enabled
+    scene.addFixedSupportNode(sf::Vector2f(420.0f, 480.0f));
+    scene.addFixedSupportNode(sf::Vector2f(850.0f, 480.0f));
 
     sf::VertexArray sky(sf::PrimitiveType::TriangleStrip, 4);
     sky[0].position = sf::Vector2f(0, 0);
@@ -109,17 +111,6 @@ void Level4::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
         window.draw(leftPillar);
         window.draw(leftBase);
 
-        // Anchor node below the left bridge
-        sf::CircleShape redDot(4.0f); // radius 4
-        redDot.setOrigin(sf::Vector2f(4.0f, 4.0f)); // center origin
-        redDot.setPosition(sf::Vector2f(343.0f, 480.0f)); // slightly below the default (343, 440)
-        redDot.setFillColor(sf::Color(210, 30, 30));
-        window.draw(redDot);
-
-        // Anchor node below the right bridge
-        redDot.setPosition(sf::Vector2f(937.0f, 480.0f)); // slightly below the default (937, 440)
-        window.draw(redDot);       
-        
         hud.draw(window, simRunning);
         window.display();
     }

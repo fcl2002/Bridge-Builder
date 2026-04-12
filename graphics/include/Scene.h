@@ -45,6 +45,8 @@ private:
     // Fixed anchor nodes at each end of the bridge
     sf::CircleShape fixedNodeLeft;
     sf::CircleShape fixedNodeRight;
+    std::vector<sf::Vector2f> extraFixedNodePositions;
+    std::vector<Node*> extraFixedNodes;
 
     std::vector<WoodSegment> woodSegments;
     bool woodDragActive = false;
@@ -62,6 +64,7 @@ private:
     void createSlopeRight();
     void createFlag();
     void createFixedNodes();
+    void rebuildExtraFixedNodes();
 
     // Helpers for simulating the vehicle and its position along the road
     std::vector<WoodBeam*> getRoadBeams() const;
@@ -70,6 +73,7 @@ private:
 
 public:
     Scene(bool enableCarVehicle = true, bool enableTruckVehicle = false);
+    Node* addFixedSupportNode(const sf::Vector2f& position);
     bool startWoodSegment(const sf::Vector2f& start, float maxLengthPixels);
     void updateWoodSegmentPreview(const sf::Vector2f& end);
     // Returns debited cost (0 if not created)

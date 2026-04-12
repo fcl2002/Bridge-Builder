@@ -55,6 +55,13 @@ Scene::Scene(bool enableCarVehicle, bool enableTruckVehicle)
     }
 }
 
+Node* Scene::addFixedSupportNode(const sf::Vector2f& position) {
+    extraFixedNodePositions.push_back(position);
+    Node* node = bridge.addNode(Vec2(position.x, position.y), 1.0f, true);
+    extraFixedNodes.push_back(node);
+    return node;
+}
+
 Node* Scene::findNode(const sf::Vector2f& pos, float threshold) {
     for (const auto& node : bridge.nodes) { 
         float dx = node->position.x - pos.x;
@@ -284,6 +291,13 @@ void Scene::createFixedNodes() {
     bridge.addNode(Vec2(850.0f, 440.0f), 1.0f, true);
 }
 
+void Scene::rebuildExtraFixedNodes() {
+    extraFixedNodes.clear();
+    for (const auto& position : extraFixedNodePositions) {
+        extraFixedNodes.push_back(bridge.addNode(Vec2(position.x, position.y), 1.0f, true));
+    }
+}
+
 bool Scene::startWoodSegment(const sf::Vector2f& mousePos, float maxLengthPixels) {
     Node* startNode = findNode(mousePos);
     
@@ -384,6 +398,7 @@ void Scene::clearWoodSegments() {
 
     // Recreate the fixed anchor nodes
     createFixedNodes();
+    rebuildExtraFixedNodes();
 }
 
 void Scene::draw(sf::RenderWindow& window, bool simRunning) {
@@ -462,4 +477,15 @@ void Scene::draw(sf::RenderWindow& window, bool simRunning) {
 
     window.draw(fixedNodeLeft);
     window.draw(fixedNodeRight);
+
+    sf::CircleShape extraFixedNode(4.0f);
+    extraFixedNode.setOrigin(sf::Vector2f(4.0f, 4.0f));
+    extraFixedNode.setFillColor(sf::Color(210, 30, 30));
+    for (const auto* node : extraFixedNodes) {
+        if (!node) {
+            continue;
+        }
+        extraFixedNode.setPosition(sf::Vector2f(node->position.x, node->position.y));
+        window.draw(extraFixedNode);
+    }
 }

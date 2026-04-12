@@ -128,12 +128,12 @@ void Level3::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
         // Anchor node below the left bridge
         sf::CircleShape redDot(4.0f); // radius 4
         redDot.setOrigin(sf::Vector2f(4.0f, 4.0f)); // center origin
-        redDot.setPosition(sf::Vector2f(343.0f, 480.0f)); // slightly below the default (343, 440)
+        redDot.setPosition(sf::Vector2f(420.0f, 480.0f)); // below the original left bridge support
         redDot.setFillColor(sf::Color(210, 30, 30));
         window.draw(redDot);
 
         // Anchor node below the right bridge
-        redDot.setPosition(sf::Vector2f(937.0f, 480.0f)); // slightly below the default (937, 440)
+        redDot.setPosition(sf::Vector2f(850.0f, 480.0f)); // below the original right bridge support
         window.draw(redDot);
         
         // Anchor node above the pillars
