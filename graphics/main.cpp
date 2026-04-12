@@ -36,8 +36,6 @@ int main() {
             level = std::make_unique<Level2>();
         } else if (currentLevel == 3) {
             level = std::make_unique<Level3>();
-        } else if (currentLevel == 4) {
-            level = std::make_unique<Level4>();
         }
 
         if (!level) {

@@ -16,7 +16,6 @@
         "graphics/src/Level.cpp",
         "graphics/src/Level2.cpp",
         "graphics/src/Level3.cpp",
-        "graphics/src/Level4.cpp",
         "graphics/src/Button.cpp",
         "classes/Bridge.cpp",
         "classes/Node.cpp",

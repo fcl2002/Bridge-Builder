@@ -5,6 +5,11 @@
 void Level3::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning, int& currentLevel) {
     constexpr float MAX_WOOD_SEGMENT_LENGTH = 80.0f;
     Scene scene(true, true); // Both car and truck enabled
+    scene.addFixedSupportNode(sf::Vector2f(420.0f, 480.0f));
+    scene.addFixedSupportNode(sf::Vector2f(850.0f, 480.0f));
+
+    scene.addFixedSupportNode(sf::Vector2f(540.0f, 500.0f));
+    scene.addFixedSupportNode(sf::Vector2f(755.0f, 500.0f));
 
     sf::VertexArray sky(sf::PrimitiveType::TriangleStrip, 4);
     sky[0].position = sf::Vector2f(0, 0);
@@ -47,10 +52,6 @@ void Level3::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
                     } else if (action == "level_3") {
                         simRunning = false;
                         currentLevel = 3;
-                        return;
-                    } else if (action == "level_4") {
-                        simRunning = false;
-                        currentLevel = 4;
                         return;
                     }
 
@@ -124,23 +125,7 @@ void Level3::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
         
         window.draw(leftBase);
         window.draw(rightBase);
-
-        // Anchor node below the left bridge
-        sf::CircleShape redDot(4.0f); // radius 4
-        redDot.setOrigin(sf::Vector2f(4.0f, 4.0f)); // center origin
-        redDot.setPosition(sf::Vector2f(420.0f, 480.0f)); // below the original left bridge support
-        redDot.setFillColor(sf::Color(210, 30, 30));
-        window.draw(redDot);
-
-        // Anchor node below the right bridge
-        redDot.setPosition(sf::Vector2f(850.0f, 480.0f)); // below the original right bridge support
-        window.draw(redDot);
-        
-        // Anchor node above the pillars
-        redDot.setPosition(sf::Vector2f(540.0f, riverTopY));
-        window.draw(redDot);
-        redDot.setPosition(sf::Vector2f(755.0f, riverTopY));
-        window.draw(redDot);        
+     
         
         hud.draw(window, simRunning);
         window.display();

@@ -35,9 +35,9 @@ void drawWoodSegment(sf::RenderWindow& window, const sf::Vector2f& start, const 
 Scene::Scene(bool enableCarVehicle, bool enableTruckVehicle)
     : car(sf::Vector2f(30.0f, 440.0f)),
       carBasePos(30.0f, 440.0f),
-      carVehicle(780.0f, 1.0f), // weight in N , speed in px/s
+      carVehicle(780.0f, 1.2f), // weight in N , speed in px/s
       truckBasePos(30.0f, 440.0f),
-      truckVehicle(900.0f, 0.8f),
+      truckVehicle(900.0f, 0.6f),
       hasCarVehicle(enableCarVehicle),
       hasTruckVehicle(enableTruckVehicle)
 {

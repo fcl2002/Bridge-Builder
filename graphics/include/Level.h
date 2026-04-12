@@ -8,7 +8,6 @@ inline int getInitialBudgetForLevel(int level) {
         case 1: return 1000;
         case 2: return 1200;
         case 3: return 1500;
-        case 4: return 1500;
         default: return 1000;
     }
 }
@@ -34,7 +33,3 @@ public:
     void run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning, int& currentLevel) override;
 };
 
-class Level4 : public Level {
-public:
-    void run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bool& simRunning, int& currentLevel) override;
-};

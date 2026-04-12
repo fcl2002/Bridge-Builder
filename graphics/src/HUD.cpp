@@ -16,7 +16,7 @@ bool loadTextureFromAny(sf::Texture& texture, std::initializer_list<const char*>
 }
 
 HUD::HUD(const sf::Font& font, int level, int score, int budget)
-    : hudLevel(font), hudScore(font), hudBudget(font), playIcon(3), level1Text(font), level2Text(font), level3Text(font), level4Text(font)
+    : hudLevel(font), hudScore(font), hudBudget(font), playIcon(3), level1Text(font), level2Text(font), level3Text(font)
 {
     const float BTN_SIZE = 44.0f;
     const float BTN_Y = 8.0f;
@@ -164,12 +164,6 @@ HUD::HUD(const sf::Font& font, int level, int score, int budget)
     level3Btn.setOutlineColor(sf::Color(0, 77, 64));
     level3Btn.setOutlineThickness(2.0f);
 
-    level4Btn.setSize(sf::Vector2f(280.0f, 50.0f));
-    level4Btn.setPosition(sf::Vector2f(460.0f, 480.0f));
-    level4Btn.setFillColor(sf::Color(38, 166, 154));
-    level4Btn.setOutlineColor(sf::Color(0, 77, 64));
-    level4Btn.setOutlineThickness(2.0f);
-
     level1Text.setCharacterSize(18);
     level1Text.setFillColor(sf::Color::White);
     level1Text.setString("Level 1");
@@ -185,10 +179,6 @@ HUD::HUD(const sf::Font& font, int level, int score, int budget)
     level3Text.setString("Level 3");
     level3Text.setPosition(sf::Vector2f(545.0f, 425.0f));
 
-    level4Text.setCharacterSize(18);
-    level4Text.setFillColor(sf::Color::White);
-    level4Text.setString("Level 4");
-    level4Text.setPosition(sf::Vector2f(545.0f, 495.0f));
 }
 
 void HUD::update(int score, int budget) {
@@ -234,12 +224,6 @@ std::string HUD::handleClick(sf::Vector2f pos) {
         menuOpen = false;
         clearToolSelection();
         return "level_3";
-    }
-
-    if (menuOpen && level4Btn.getGlobalBounds().contains(pos)) {
-        menuOpen = false;
-        clearToolSelection();
-        return "level_4";
     }
 
     if (menuOpen && menuPanel.getGlobalBounds().contains(pos)) {
@@ -318,8 +302,6 @@ void HUD::draw(sf::RenderWindow& window, bool simRunning) const {
         window.draw(level2Text);
         window.draw(level3Btn);
         window.draw(level3Text);
-        window.draw(level4Btn);
-        window.draw(level4Text);
     }
 }
 
