@@ -3,6 +3,16 @@
 #include "Scene.h"
 #include "HUD.h"
 
+inline int getInitialBudgetForLevel(int level) {
+    switch (level) {
+        case 1: return 1000;
+        case 2: return 1200;
+        case 3: return 1500;
+        case 4: return 1500;
+        default: return 1000;
+    }
+}
+
 class Level {
 public:
     virtual ~Level() = default;

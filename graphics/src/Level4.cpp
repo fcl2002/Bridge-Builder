@@ -31,7 +31,7 @@ void Level4::run(sf::RenderWindow& window, HUD& hud, int& score, int& budget, bo
                     } else if (action == "reset") {
                         simRunning = false;
                         score = 0;
-                        budget = 1000;
+                        budget = getInitialBudgetForLevel(currentLevel);
                         scene.clearWoodSegments();
                         hud.update(score, budget);
                     } else if (action == "level_1") {

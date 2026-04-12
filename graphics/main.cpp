@@ -23,7 +23,7 @@ int main() {
     // Game state variables
     bool simRunning = false;
     int currentLevel = 1;
-    int budget = 1600;
+    int budget = getInitialBudgetForLevel(currentLevel);
     int score = 0;
 
     while (window.isOpen()) {
@@ -55,7 +55,7 @@ int main() {
         if (currentLevel != previousLevel) {
             simRunning = false;
             score = 0;
-            budget = 1000;
+            budget = getInitialBudgetForLevel(currentLevel);
         }
     }
 
