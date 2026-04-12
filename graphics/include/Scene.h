@@ -64,7 +64,7 @@ private:
 
 public:
     Scene(bool drawCar = true);
-    void startWoodSegment(const sf::Vector2f& start, float maxLengthPixels);
+    bool startWoodSegment(const sf::Vector2f& start, float maxLengthPixels);
     void updateWoodSegmentPreview(const sf::Vector2f& end);
     // Returns debited cost (0 if not created)
     Bridge& getBridge() {
