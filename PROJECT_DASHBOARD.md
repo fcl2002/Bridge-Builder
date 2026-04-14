@@ -78,7 +78,7 @@ This epic implements all game logic that connects physics and graphics into a pl
 
 **Key Features:**
 
-- Progressive level design (1-10 levels)
+- Progressive level design (1-3 levels)
 - Budget system and material costs
 - Scoring system and high scores
 - Win/loss conditions and level progression

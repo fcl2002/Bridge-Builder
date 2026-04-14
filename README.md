@@ -12,8 +12,8 @@ The project is divided into **3 specialized development areas**, each led by a d
 
 | Area                     | Responsible            | Epic                            |
 | ------------------------ | ---------------------- | ------------------------------- |
-| **Physics & Simulation** | Matheus SISTON GALDINO | Physics Engine Foundation       |
-| **Graphics & UI**        | Fernandno COSTA LASMAR | Graphics & Visualization System |
+| **Physics** | Matheus SISTON GALDINO | Physics Engine Foundation       |
+| **Graphics**        | Fernandno COSTA LASMAR | Graphics & Visualization System |
 | **Game Logic**           | Flávio ROSIM DE SOUSA  | Game Logic & Core Mechanics     |
 
 ## 🔗 Epic-Developer Relationship
